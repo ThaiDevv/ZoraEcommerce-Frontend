@@ -336,7 +336,7 @@ export default function RegisterPage() {
               >
                 {/* Bespoke Luxury VIP Welcome Box Artwork */}
                 <img
-                  src="/images/register-art.jpg"
+                  src="/images/register-art.jpg?v=2"
                   alt="Zora VIP Membership Welcome Invitation"
                   style={{
                     maskImage: 'radial-gradient(ellipse 90% 86% at 50% 50%, black 62%, transparent 96%)',
