@@ -1,10 +1,11 @@
 export interface User {
-  id: number
+  id?: number
   email: string
   fullName: string
   phone?: string
   avatarUrl?: string
   role?: string
+  isActive?: boolean
 }
 
 export interface LoginRequest {
@@ -16,10 +17,26 @@ export interface RegisterRequest {
   email: string
   password: string
   fullName: string
+  fullname?: string
+  phone?: string
+}
+
+export interface LoginResponse {
+  accessToken: string
+  refreshToken: string
+  username: string
+}
+
+export interface RegisterResponse {
+  fullName: string
+  email: string
   phone?: string
 }
 
 export interface AuthResponse {
-  token: string
-  user: User
+  accessToken?: string
+  refreshToken?: string
+  token?: string
+  username?: string
+  user?: User
 }

@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { authApi } from '../api/authApi'
 import ZoraLogo from '../components/ZoraLogo'
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -14,6 +15,15 @@ export default function LoginPage() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [infoMessage, setInfoMessage] = useState<string | null>(null)
+
+  // Check if redirected from registration
+  useEffect(() => {
+    if (location.state?.registeredEmail) {
+      setEmail(location.state.registeredEmail)
+      setInfoMessage('Đăng ký tài khoản thành công! Vui lòng đăng nhập để bắt đầu.')
+    }
+  }, [location.state])
 
   // Full page mouse parallax for animated aurora background
   const [pageMouse, setPageMouse] = useState({ x: 0, y: 0 })
@@ -73,30 +83,45 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setErrorMessage(null)
+    setInfoMessage(null)
 
     if (!email.trim() || !password.trim()) {
-      setErrorMessage('Vui lòng nhập email và mật khẩu')
+      setErrorMessage('Vui lòng nhập đầy đủ email và mật khẩu')
       return
     }
 
     setIsLoading(true)
 
     try {
+      const normalizedEmail = email.trim().toLowerCase()
       const response = await authApi.login({
-        email: email.trim(),
+        email: normalizedEmail,
         password,
       })
 
-      if (response && (response as any).accessToken) {
-        const token = (response as any).accessToken
+      const token = response?.accessToken || (response as any)?.token
+      if (token) {
         if (rememberMe) {
           localStorage.setItem('token', token)
-          if ((response as any).refreshToken) {
-            localStorage.setItem('refreshToken', (response as any).refreshToken)
+          if (response.refreshToken) {
+            localStorage.setItem('refreshToken', response.refreshToken)
           }
         } else {
           sessionStorage.setItem('token', token)
         }
+        if (response.username) {
+          localStorage.setItem('username', response.username)
+        }
+      }
+
+      // Fetch user profile info
+      try {
+        const profile = await authApi.getProfile()
+        if (profile) {
+          localStorage.setItem('user', JSON.stringify(profile))
+        }
+      } catch (profileErr) {
+        console.warn('Could not fetch user profile details:', profileErr)
       }
 
       navigate('/')
@@ -283,7 +308,7 @@ export default function LoginPage() {
         <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center bg-white">
           <div className="w-full max-w-sm mx-auto">
             
-                        {/* Mobile Brand Header */}
+            {/* Mobile Brand Header */}
             <div className="lg:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-white border border-slate-200/60 shadow-xs flex items-center justify-center p-1 shrink-0">
@@ -314,9 +339,21 @@ export default function LoginPage() {
 
             {/* Error Alert */}
             {errorMessage && (
-              <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200/80 text-rose-700 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
-                <span>{errorMessage}</span>
+              <div className="mb-5 p-3 rounded-xl bg-[#FFF5F5] border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5 shadow-xs">
+                <div className="w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                </div>
+                <span className="font-medium">{errorMessage}</span>
+              </div>
+            )}
+
+            {/* Info / Success Alert */}
+            {infoMessage && (
+              <div className="mb-5 p-3 rounded-xl bg-gradient-to-r from-orange-50/90 via-[#FFF8F5] to-amber-50/70 border border-[#ee4d2d]/25 text-slate-800 text-xs flex items-center gap-2.5 shadow-xs animate-in fade-in duration-300">
+                <div className="w-5 h-5 rounded-full bg-[#ee4d2d]/10 border border-[#ee4d2d]/20 flex items-center justify-center text-[#ee4d2d] shrink-0">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+                <span className="font-medium text-slate-700 flex-1">{infoMessage}</span>
               </div>
             )}
 
@@ -415,7 +452,7 @@ export default function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Đang xử lý...</span>
+                    <span>Đang đăng nhập...</span>
                   </>
                 ) : (
                   <span>Đăng nhập</span>
