@@ -34,5 +34,6 @@ __pycache__/
 .venv/
 env/
 
-# Local symlinks to external repositories
-ZoraShop-MiniShopeeE
+# Local environment files
+.env*.local
+*.local
