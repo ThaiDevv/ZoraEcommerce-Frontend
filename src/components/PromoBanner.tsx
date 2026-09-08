@@ -29,7 +29,7 @@ export default function PromoBanner() {
   const formatNumber = (num: number) => num.toString().padStart(2, "0")
 
   return (
-    <section className="w-full py-4 bg-white">
+    <section className="w-full py-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-2xl overflow-hidden shadow-md bg-gradient-to-r from-[#b91c1c] via-[#ee4d2d] to-[#ea580c] p-6 sm:p-8 text-white">
           

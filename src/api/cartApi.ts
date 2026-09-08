@@ -37,8 +37,8 @@ export const cartApi = {
     }
   },
 
-  addToCart: async (variantId: number, quantity: number) => {
-    return await axiosClient.post('/cart/item', { variantId, quantity })
+  addToCart: async (sku: string, quantity: number = 1) => {
+    return await axiosClient.post('/cart/item', { sku, quantity })
   },
 
   updateItemQuantity: async (cartItemId: number, quantity: number) => {

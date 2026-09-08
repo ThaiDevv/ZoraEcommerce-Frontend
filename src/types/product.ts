@@ -8,12 +8,25 @@ export interface CategoryResponse {
   children?: CategoryResponse[]
 }
 
+export interface CategorySummary {
+  id: number
+  name: string
+  slug?: string
+}
+
 export interface Category {
   id: number
   name: string
   slug: string
   imageUrl?: string
   parentId?: number | null
+}
+
+export interface ProductImage {
+  id: number
+  imageUrl: string
+  sortOrder?: number
+  isPrimary?: boolean
 }
 
 export interface ProductVariant {
@@ -23,6 +36,15 @@ export interface ProductVariant {
   price: number
   stock: number
   imageUrl?: string
+}
+
+export interface ShopSummary {
+  id: number
+  name: string
+  logoUrl?: string
+  rating?: number
+  totalProducts?: number
+  responseRate?: string
 }
 
 export interface ProductSummaryResponse {
@@ -46,12 +68,18 @@ export interface Product {
   price: number
   originalPrice?: number
   soldCount?: number
-  rating?: number
-  imageUrl: string
+  ratingAvg?: number
+  ratingCount?: number
+  viewCount?: number
+  status?: string
+  imageUrl?: string
   primaryImageUrl?: string
-  category?: Category
+  category?: CategorySummary
+  shop?: ShopSummary
   shopId?: number
   shopName?: string
+  images?: ProductImage[]
   variants?: ProductVariant[]
   createdAt?: string
+  createdDate?: string
 }

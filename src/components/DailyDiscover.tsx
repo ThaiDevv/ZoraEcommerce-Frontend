@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { useState, useEffect, useCallback } from "react"
 import { 
   Star, 
@@ -303,11 +304,11 @@ export default function DailyDiscover() {
   }
 
   return (
-    <section id="daily-discover" className="w-full bg-[#f8fafc] py-6">
+    <section id="daily-discover" className="w-full py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         
         {/* ================= 1. TAB HEADER: GỢI Ý HÔM NAY ================= */}
-        <div className="bg-white rounded-xl p-3.5 shadow-xs border border-slate-200/80 sticky top-[72px] z-40 backdrop-blur-md">
+        <div className="bg-white rounded-xl p-3.5 shadow-xs border border-slate-200/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             
             {/* Title: GỢI Ý HÔM NAY (Đơn giản, tách biệt) */}
@@ -358,8 +359,9 @@ export default function DailyDiscover() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {products.map((item) => (
-              <div
+              <Link
                 key={item.id}
+                to={`/product/${item.slug || item.id}`}
                 className="group bg-white rounded-xl overflow-hidden border border-slate-200/80 hover:border-[#ee4d2d] shadow-2xs hover:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between hover:-translate-y-1 relative"
               >
                 {/* Product Image & Badges */}
@@ -430,7 +432,7 @@ export default function DailyDiscover() {
                     <span>{item.sold}</span>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

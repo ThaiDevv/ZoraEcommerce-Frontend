@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { ArrowUp } from "lucide-react"
 import MainHeader from "../components/MainHeader"
+import SubtleBackground from "../components/SubtleBackground"
 import BannerSlider from "../components/BannerSlider"
 import FeaturedCategories from "../components/FeaturedCategories"
 import PromoBanner from "../components/PromoBanner"
@@ -30,13 +31,18 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f5f5f5] text-slate-800 antialiased">
-      {/* 1. Header with Search Bar, Suggestion Chips, Cart Logo */}
-      <MainHeader />
+    <div className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800 antialiased relative selection:bg-orange-100 selection:text-[#ee4d2d]">
+      {/* Background nhẹ nhàng, tinh tế, êm dịu cho mắt */}
+      <SubtleBackground />
 
-      {/* Main Page Sections */}
-      <main className="flex-1 space-y-3 pb-8">
-        {/* 2. Hero Banner Slider (Auto-sliding) + 2 Side Banners + 8 Quick Service Badges */}
+      {/* 1. Header with Search Bar, Suggestion Chips, Cart Logo (Sticky z-50) */}
+      <div className="relative z-50">
+        <MainHeader />
+      </div>
+
+      {/* Main Page Sections: Nổi bật sạch sẽ trên nền subtle background */}
+      <main className="relative z-10 flex-1 space-y-3 pb-8">
+        {/* 2. Hero Banner Slider + 2 Side Banners + 8 Quick Service Badges */}
         <BannerSlider />
 
         {/* 3. Featured Categories */}
@@ -45,18 +51,20 @@ export default function HomePage() {
         {/* 4. Secondary Promotional Banner (Mega Sale) */}
         <PromoBanner />
 
-        {/* 5. Top Search Products (Mock data) */}
+        {/* 5. Top Search Products */}
         <TopSearchSection />
 
-        {/* 6. Daily Discover Products (Gợi ý hôm nay - Tách riêng biệt với tìm kiếm) */}
+        {/* 6. Daily Discover Products (Gợi ý hôm nay) */}
         <DailyDiscover />
 
-        {/* 7. Comprehensive 5-Column Category Tree matching user image */}
+        {/* 7. Comprehensive 5-Column Category Tree */}
         <CategoryDirectory />
       </main>
 
       {/* 8. Full E-Commerce Footer */}
-      <AuthFooter />
+      <div className="relative z-10">
+        <AuthFooter />
+      </div>
 
       {/* Floating Scroll-to-Top Button */}
       {showScrollTop && (

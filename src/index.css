@@ -118,3 +118,114 @@
 .animate-ambient-pulse {
   animation: ambient-pulse 8s ease-in-out infinite;
 }
+
+/* ================= Header Flow & Ambient Glow Animations ================= */
+@keyframes header-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-flow {
+  background-size: 250% 250%;
+  animation: header-gradient-flow 12s ease infinite;
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  50%, 100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmer-sweep 6s ease-in-out infinite;
+}
+
+/* ================= Ultra-gentle Background Drift Animations ================= */
+@keyframes subtle-drift-1 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(25px, -18px) scale(1.03);
+  }
+  100% {
+    transform: translate(-15px, 15px) scale(0.98);
+  }
+}
+
+@keyframes subtle-drift-2 {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  50% {
+    transform: translate(-22px, 20px) scale(1.02);
+  }
+  100% {
+    transform: translate(16px, -14px) scale(0.97);
+  }
+}
+
+.animate-subtle-drift-1 {
+  animation: subtle-drift-1 22s ease-in-out infinite alternate;
+}
+
+.animate-subtle-drift-2 {
+  animation: subtle-drift-2 26s ease-in-out infinite alternate;
+}
+
+/* ================= Hiệu Ứng Loang Vùng Sáng Cam Nhẹ (Orange Light Diffusion) ================= */
+@keyframes orange-diffuse-main {
+  0% {
+    transform: translate(0px, 0px) scale(0.92);
+    border-radius: 50% 50% 50% 50%;
+    opacity: 0.22;
+  }
+  35% {
+    transform: translate(30px, -20px) scale(1.18);
+    border-radius: 60% 40% 65% 35% / 45% 55% 45% 55%;
+    opacity: 0.36;
+  }
+  70% {
+    transform: translate(-25px, 18px) scale(1.3);
+    border-radius: 40% 60% 35% 65% / 55% 45% 60% 40%;
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(12px, -10px) scale(1.02);
+    border-radius: 55% 45% 50% 50% / 50% 50% 55% 45%;
+    opacity: 0.24;
+  }
+}
+
+@keyframes orange-diffuse-echo {
+  0% {
+    transform: translate(0px, 0px) scale(0.88);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate(-30px, 25px) scale(1.38);
+    opacity: 0.26;
+  }
+  100% {
+    transform: translate(20px, -15px) scale(1.08);
+    opacity: 0.15;
+  }
+}
+
+.animate-orange-diffuse-main {
+  animation: orange-diffuse-main 15s ease-in-out infinite alternate;
+}
+
+.animate-orange-diffuse-echo {
+  animation: orange-diffuse-echo 20s ease-in-out infinite alternate;
+}

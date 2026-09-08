@@ -70,7 +70,7 @@ export default function CategoryDirectory() {
   }, [])
 
   return (
-    <section id="full-category-directory" className="w-full bg-white border-t border-slate-200/80 py-10 text-slate-600 select-none">
+    <section id="full-category-directory" className="w-full bg-white/90 backdrop-blur-md border-t border-slate-200/80 py-10 text-slate-600 select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         {/* Title Header */}

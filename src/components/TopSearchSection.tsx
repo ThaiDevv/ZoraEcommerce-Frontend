@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { Flame, ChevronRight, TrendingUp } from "lucide-react"
 
 // Pure Mock Data for Top Search Products (Tính năng mock hoàn toàn theo yêu cầu)
@@ -60,7 +61,7 @@ const MOCK_TOP_SEARCH_PRODUCTS = [
 
 export default function TopSearchSection() {
   return (
-    <section className="w-full bg-[#f8fafc] py-6">
+    <section className="w-full py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -94,8 +95,9 @@ export default function TopSearchSection() {
         {/* Top Search Grid (6 products on desktop, 3 on tablet, 2 on mobile) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
           {MOCK_TOP_SEARCH_PRODUCTS.map((product) => (
-            <div
+            <Link
               key={product.id}
+              to={`/product/${product.id}`}
               className="group bg-white rounded-xl overflow-hidden border border-slate-200/80 hover:border-[#ee4d2d] shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between hover:-translate-y-1 relative"
             >
               {/* TOP Rank Badge */}
@@ -134,7 +136,7 @@ export default function TopSearchSection() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
