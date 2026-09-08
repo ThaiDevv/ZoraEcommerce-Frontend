@@ -1,6 +1,6 @@
-# ZoraShop — Prompts chuẩn cho Google Stitch (labs.google/stitch)
+# ZoraEcommerce — Prompts chuẩn cho Google Stitch (labs.google/stitch)
 
-> Bộ prompt này được thiết kế dựa trên cấu trúc **`taste-skill` / `stitch-design-taste`** và bám sát 100% dữ liệu backend của dự án **ZoraShop (Mini-Shopee)**.
+> Bộ prompt này được thiết kế dựa trên cấu trúc **`taste-skill` / `stitch-design-taste`** và bám sát 100% dữ liệu backend của dự án **ZoraEcommerce (Mini-Shopee)**.
 > 
 > 💡 **Khuyến nghị**: Google Stitch hiểu và sinh layout đẹp nhất bằng **tiếng Anh mô tả trực quan (Visual Descriptions)** kết hợp với các chỉ số Hex, Spacing và Anti-patterns cụ thể.
 
@@ -11,7 +11,7 @@
 Nếu Stitch có ô cấu hình Style / System Instructions hoặc khi bạn bắt đầu một project mới trên Stitch, hãy dán prompt này để thiết lập toàn bộ quy chuẩn thẩm mỹ:
 
 ```text
-You are an elite principal UI/UX designer. Generate mockups for "ZoraShop", a modern high-end multi-vendor e-commerce marketplace (curated lifestyle & tech fashion).
+You are an elite principal UI/UX designer. Generate mockups for "ZoraEcommerce", a modern high-end multi-vendor e-commerce marketplace (curated lifestyle & tech fashion).
 
 DESIGN SYSTEM SPECIFICATIONS:
 - Aesthetic: Confident, editorial yet highly functional marketplace. Atmosphere is clean, airy, premium, and human — strictly NOT generic or bloated.
@@ -40,11 +40,11 @@ DESIGN SYSTEM SPECIFICATIONS:
 Dán prompt này vào Stitch để sinh màn hình Trang chủ:
 
 ```text
-Create a desktop landing and discovery page (1440px wide) for "ZoraShop" e-commerce marketplace.
+Create a desktop landing and discovery page (1440px wide) for "ZoraEcommerce" e-commerce marketplace.
 
 SECTIONS TO INCLUDE:
 1. Top Sticky Header:
-   - Left: Minimalist modern logo "ZoraShop" with small flame badge.
+   - Left: Minimalist modern logo "ZoraEcommerce" with small flame badge.
    - Center: Spacious, pill-shaped search bar with placeholder "Tìm kiếm sản phẩm, thương hiệu, shop..." with a subtle category dropdown and search button (#EA580C).
    - Right: Notification bell with unread badge '2', Wishlist icon, and Cart icon with badge '3', followed by user avatar with name "Thai Nguyen".
 
@@ -63,7 +63,7 @@ SECTIONS TO INCLUDE:
    - Asymmetric multi-card layout displaying curated items with shop verification badge ("Shop Mall"), star rating (★ 4.9, 1.2k đánh giá), and "Giao nhanh 2h" pill tag.
 
 6. Modern Footer:
-   - Clean 4-column structure (Về ZoraShop, Chăm sóc khách hàng, Chính sách bảo hành, Phương thức thanh toán với logo VNPAY/COD/Visa) on #F8FAFC surface.
+   - Clean 4-column structure (Về ZoraEcommerce, Chăm sóc khách hàng, Chính sách bảo hành, Phương thức thanh toán với logo VNPAY/COD/Visa) on #F8FAFC surface.
 ```
 
 ---
@@ -114,7 +114,7 @@ PAGE STRUCTURE:
 Dán prompt này vào Stitch để sinh màn hình Giỏ hàng và Thanh toán:
 
 ```text
-Create a clean, frictionless Cart and Checkout screen (1440px desktop) for ZoraShop e-commerce platform.
+Create a clean, frictionless Cart and Checkout screen (1440px desktop) for ZoraEcommerce e-commerce platform.
 
 LAYOUT ARCHITECTURE (2-Column: 68% Left Items / 32% Right Sticky Summary):
 
@@ -160,7 +160,7 @@ Right Column (Sticky Order Summary Card):
 Dán prompt này vào Stitch để sinh màn hình Quản lý đơn hàng:
 
 ```text
-Design the User Account & Order Management screen (1440px desktop) for ZoraShop e-commerce.
+Design the User Account & Order Management screen (1440px desktop) for ZoraEcommerce e-commerce.
 
 LAYOUT (Sidebar Nav + Main Content Area):
 - Left Sidebar (250px width):
@@ -190,7 +190,7 @@ LAYOUT (Sidebar Nav + Main Content Area):
 Dán prompt này vào Stitch để sinh màn hình Dashboard Kênh người bán:
 
 ```text
-Design a high-density, professional Seller Center Dashboard (1440px desktop) for "ZoraShop Seller Portal".
+Design a high-density, professional Seller Center Dashboard (1440px desktop) for "ZoraEcommerce Seller Portal".
 
 DENSITY & ATMOSPHERE:
 - Cockpit-dense, data-rich interface (Density Level 8, Variance 4).
@@ -199,7 +199,7 @@ DENSITY & ATMOSPHERE:
 
 LAYOUT STRUCTURE:
 1. Left Navigation Sidebar (Dark Navy #0F172A):
-   - Logo: "ZoraShop Seller"
+   - Logo: "ZoraEcommerce Seller"
    - Menu items: [Tổng quan / Dashboard (Active)], [Quản lý đơn hàng (Badge: 14 mới)], [Quản lý sản phẩm], [Tài chính & Doanh thu], [Thiết lập Shop].
    - Bottom: Shop switcher "Zora Tech Store" with avatar.
 

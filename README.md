@@ -1,32 +1,26 @@
-# React + TypeScript + Vite
+# ZoraEcommerce - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Nền tảng thương mại điện tử hiện đại xây dựng bằng **React 19**, **TypeScript**, **Vite**, và **Tailwind CSS v4**.
 
-Currently, two official plugins are available:
+## 🚀 Khởi chạy dự án
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+# Cài đặt dependencies
+npm install
 
-## React Compiler
+# Chạy server phát triển (cổng 3000)
+npm run dev
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# Build kiểm tra sản phẩm
+npm run build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 📂 Cấu trúc thư mục
+
+- `src/api/`: Các hàm gọi API kết nối Spring Boot Backend.
+- `src/types/`: Khai báo kiểu dữ liệu TypeScript (Auth, Product, Cart, Order, v.v.).
+- `src/utils/`: Hàm tiện ích (format tiền tệ, ngày tháng).
+- `src/components/`: Các UI component tái sử dụng.
+- `src/pages/`: Các trang giao diện chính.
+- `src/layouts/`: Khung layout trang.
+- `src/context/`: Quản lý state toàn cục.
