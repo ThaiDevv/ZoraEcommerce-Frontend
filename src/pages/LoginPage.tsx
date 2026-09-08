@@ -67,10 +67,8 @@ export default function LoginPage() {
               <ArrowLeft className="w-3.5 h-3.5" />
               Trang chủ
             </Link>
-            <div className="flex items-center gap-2">
-              <span className="w-7 h-7 rounded-lg bg-[#ee4d2d] text-white flex items-center justify-center font-bold text-sm shadow-xs">
-                Z
-              </span>
+            <div className="flex items-center gap-2.5">
+              <img src="/logo.png" alt="ZoraEcommerce Logo" className="w-8 h-8 object-contain rounded-lg" />
               <span className="text-xl font-bold text-[#0F172A] tracking-tight font-['Plus_Jakarta_Sans']">
                 Zora<span className="text-[#ee4d2d]">Ecommerce</span>
               </span>
