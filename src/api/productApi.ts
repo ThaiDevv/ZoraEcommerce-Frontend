@@ -1,28 +1,45 @@
 import axiosClient from './axiosClient'
-import type { Product, Category } from '../types/product'
-import type { ApiResponse, PageResponse } from '../types/api'
+import type { CategoryResponse, ProductSummaryResponse, Product } from '../types/product'
+import type { PageResponse } from '../types/api'
+
+export interface GetProductsParams {
+  page?: number
+  size?: number
+  keyword?: string
+  categoryId?: number
+  minPrice?: number
+  maxPrice?: number
+  sortBy?: 'CREATED_DATE' | 'PRICE' | 'SOLD_COUNT' | 'RATING_AVG' | string
+  sortDir?: 'ASC' | 'DESC' | string
+}
 
 export const productApi = {
-  getProducts: async (params?: {
-    page?: number
-    size?: number
-    keyword?: string
-    categoryId?: number
-    sortBy?: string
-  }): Promise<PageResponse<Product>> => {
-    const res = await axiosClient.get<any, ApiResponse<PageResponse<Product>>>('/products', {
+  getProducts: async (params?: GetProductsParams): Promise<PageResponse<ProductSummaryResponse>> => {
+    const data = await axiosClient.get<any, PageResponse<ProductSummaryResponse>>('/products', {
       params,
     })
-    return res.data
+    return data
   },
 
-  getProductById: async (id: number | string): Promise<Product> => {
-    const res = await axiosClient.get<any, ApiResponse<Product>>(`/products/${id}`)
-    return res.data
+  getTopSoldProducts: async (size = 6): Promise<PageResponse<ProductSummaryResponse>> => {
+    const data = await axiosClient.get<any, PageResponse<ProductSummaryResponse>>('/products', {
+      params: {
+        sortBy: 'SOLD_COUNT',
+        sortDir: 'DESC',
+        page: 0,
+        size,
+      },
+    })
+    return data
   },
 
-  getCategories: async (): Promise<Category[]> => {
-    const res = await axiosClient.get<any, ApiResponse<Category[]>>('/categories')
-    return res.data
+  getProductBySlug: async (slug: string): Promise<Product> => {
+    const data = await axiosClient.get<any, Product>(`/products/${slug}`)
+    return data
+  },
+
+  getCategoryTree: async (): Promise<CategoryResponse[]> => {
+    const data = await axiosClient.get<any, CategoryResponse[]>('/categories')
+    return data
   },
 }

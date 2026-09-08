@@ -1,28 +1,57 @@
 import axiosClient from './axiosClient'
-import type { Cart, AddToCartRequest } from '../types/cart'
-import type { ApiResponse } from '../types/api'
+
+export interface BackendCartItem {
+  id: number
+  productId: number
+  productName: string
+  productImage?: string
+  variantName?: string
+  price: number
+  quantity: number
+  totalPrice: number
+}
+
+export interface BackendCartShopGroup {
+  shopId: number
+  shopName: string
+  shopLogo?: string
+  cartItems: BackendCartItem[]
+}
+
+export interface BackendCartResponse {
+  cartId: number
+  totalAmount: number
+  totalItem: number
+  shopGroups: BackendCartShopGroup[]
+}
 
 export const cartApi = {
-  getCart: async (): Promise<Cart> => {
-    const res = await axiosClient.get<any, ApiResponse<Cart>>('/cart')
-    return res.data
+  getCart: async (): Promise<BackendCartResponse | null> => {
+    try {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+      if (!token) return null
+      const res = await axiosClient.get<any, BackendCartResponse>('/cart')
+      return res
+    } catch {
+      return null
+    }
   },
 
-  addToCart: async (data: AddToCartRequest): Promise<Cart> => {
-    const res = await axiosClient.post<any, ApiResponse<Cart>>('/cart/items', data)
-    return res.data
+  addToCart: async (variantId: number, quantity: number) => {
+    return await axiosClient.post('/cart/item', { variantId, quantity })
   },
 
-  updateItemQuantity: async (cartItemId: number, quantity: number): Promise<Cart> => {
-    const res = await axiosClient.put<any, ApiResponse<Cart>>(`/cart/items/${cartItemId}`, { quantity })
-    return res.data
+  updateItemQuantity: async (cartItemId: number, quantity: number) => {
+    return await axiosClient.put(`/cart/item/${cartItemId}`, null, {
+      params: { quantity }
+    })
   },
 
-  removeItem: async (cartItemId: number): Promise<void> => {
-    await axiosClient.delete(`/cart/items/${cartItemId}`)
+  removeItem: async (cartItemId: number) => {
+    return await axiosClient.delete(`/cart/item/${cartItemId}`)
   },
 
-  clearCart: async (): Promise<void> => {
-    await axiosClient.delete('/cart')
+  clearCart: async () => {
+    return await axiosClient.delete('/cart')
   },
 }
