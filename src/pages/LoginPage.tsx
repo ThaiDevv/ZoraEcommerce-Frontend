@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
 import { authApi } from '../api/authApi'
+import ZoraLogo from '../components/ZoraLogo'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -13,6 +14,61 @@ export default function LoginPage() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  // Full page mouse parallax for animated aurora background
+  const [pageMouse, setPageMouse] = useState({ x: 0, y: 0 })
+
+  const handlePageMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { innerWidth, innerHeight } = window
+    const x = (e.clientX / innerWidth - 0.5) * 2
+    const y = (e.clientY / innerHeight - 0.5) * 2
+    setPageMouse({
+      x: Number(x.toFixed(3)),
+      y: Number(y.toFixed(3)),
+    })
+  }
+
+  // Interactive 3D Perspective Tilt & Specular Light for artwork
+  const [tilt, setTilt] = useState({
+    rotateX: 0,
+    rotateY: 0,
+    glareX: 50,
+    glareY: 50,
+    isHovered: false,
+  })
+
+  const handleArtMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+
+    // Gentle 3D rotation (-6deg to +6deg)
+    const rotateX = ((y - centerY) / centerY) * -6
+    const rotateY = ((x - centerX) / centerX) * 6
+
+    const glareX = (x / rect.width) * 100
+    const glareY = (y / rect.height) * 100
+
+    setTilt({
+      rotateX: Number(rotateX.toFixed(2)),
+      rotateY: Number(rotateY.toFixed(2)),
+      glareX: Math.round(glareX),
+      glareY: Math.round(glareY),
+      isHovered: true,
+    })
+  }
+
+  const handleArtMouseLeave = () => {
+    setTilt({
+      rotateX: 0,
+      rotateY: 0,
+      glareX: 50,
+      glareY: 50,
+      isHovered: false,
+    })
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -52,42 +108,174 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] w-full bg-[#F8FAFC] flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      {/* Centered Luxury Card */}
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-[0_16px_40px_-12px_rgba(15,23,42,0.05)] border border-slate-200/80 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+    <div
+      onMouseMove={handlePageMouseMove}
+      className="relative min-h-[100dvh] w-full bg-[#F8FAFC] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden select-none"
+    >
+      {/* ================= ANIMATED LUXURY BACKGROUND ================= */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Subtle Warm Base */}
+        <div className="absolute inset-0 bg-[#F8FAFC]" />
+
+        {/* Elegant Architectural Blueprint Dot Grid with Breathing Mask */}
+        <div
+          className="absolute inset-0 opacity-[0.4] transition-opacity duration-1000"
+          style={{
+            backgroundImage: 'radial-gradient(#94A3B8 1.1px, transparent 1.1px)',
+            backgroundSize: '32px 32px',
+            maskImage: 'radial-gradient(ellipse 75% 75% at 50% 50%, black 30%, transparent 85%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 75% 75% at 50% 50%, black 30%, transparent 85%)',
+          }}
+        />
+
+        {/* Interactive Parallax Aurora Fluid Mesh */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-out"
+          style={{
+            transform: `translate3d(${pageMouse.x * 30}px, ${pageMouse.y * 30}px, 0)`,
+          }}
+        >
+          {/* Orb 1: Coral Sunrise (Top Left) */}
+          <div className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] rounded-full bg-gradient-to-tr from-[#ee4d2d]/25 via-orange-300/30 to-amber-200/25 blur-[110px] animate-aurora-1" />
+
+          {/* Orb 2: Champagne Amber (Bottom Right) */}
+          <div className="absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] max-w-[750px] max-h-[750px] rounded-full bg-gradient-to-br from-amber-200/30 via-orange-200/25 to-[#ee4d2d]/20 blur-[120px] animate-aurora-2" />
+
+          {/* Orb 3: Soft Rose Quartz (Center Right) */}
+          <div className="absolute top-[25%] -right-[5%] w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] rounded-full bg-gradient-to-bl from-rose-200/30 via-pink-100/25 to-orange-200/20 blur-[90px] animate-aurora-3" />
+
+          {/* Orb 4: Pearl Mist (Bottom Left) */}
+          <div className="absolute -bottom-[10%] left-[15%] w-[45vw] h-[45vw] max-w-[600px] max-h-[600px] rounded-full bg-gradient-to-t from-slate-200/40 via-blue-50/20 to-transparent blur-[100px] animate-ambient-pulse" />
+        </div>
+
+        {/* Floating Luxury Micro-Sparkles */}
+        <div className="absolute inset-0">
+          {[
+            { top: '18%', left: '15%', delay: '0s', dur: '6s', size: 'w-1.5 h-1.5' },
+            { top: '28%', left: '84%', delay: '1.5s', dur: '7.5s', size: 'w-2 h-2' },
+            { top: '76%', left: '18%', delay: '3s', dur: '8s', size: 'w-1 h-1' },
+            { top: '65%', left: '88%', delay: '2s', dur: '6.5s', size: 'w-1.5 h-1.5' },
+            { top: '15%', left: '72%', delay: '4s', dur: '7s', size: 'w-1 h-1' },
+            { top: '84%', left: '42%', delay: '0.8s', dur: '9s', size: 'w-2 h-2' },
+          ].map((sparkle, idx) => (
+            <div
+              key={idx}
+              className={`absolute ${sparkle.size} rounded-full bg-[#ee4d2d]/45 blur-[0.5px] pointer-events-none`}
+              style={{
+                top: sparkle.top,
+                left: sparkle.left,
+                animation: `sparkle-float ${sparkle.dur} ease-in-out infinite`,
+                animationDelay: sparkle.delay,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ================= CENTERED LUXURY CARD ================= */}
+      <div className="relative z-10 w-full max-w-4xl bg-white/95 backdrop-blur-xl rounded-3xl shadow-[0_25px_70px_-15px_rgba(15,23,42,0.08),0_10px_30px_-10px_rgba(238,77,45,0.08),0_0_0_1px_rgba(255,255,255,0.9)] border border-slate-200/70 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
         
-        {/* Left: Minimalist Visual Accent (5 cols) */}
-        <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-orange-50/60 via-slate-50 to-white p-10 flex-col justify-between border-r border-slate-100">
-          {/* Logo */}
-          <div>
-            <Link
-              to="/"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors mb-6"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Trang chủ
-            </Link>
+        {/* ================= LEFT COLUMN: Seamless Luxury Showcase (5 cols) ================= */}
+        <div className="hidden lg:flex lg:col-span-5 relative bg-gradient-to-b from-[#F2EFE8] via-[#F6F4EE] to-[#F8F6F1] p-8 flex-col justify-between border-r border-slate-200/50 overflow-hidden">
+          
+          {/* Ambient Lighting Accents */}
+          <div className="absolute -top-16 -left-16 w-56 h-56 bg-orange-200/20 rounded-full blur-3xl pointer-events-none animate-pulse" />
+          <div className="absolute -bottom-16 -right-16 w-56 h-56 bg-rose-200/20 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Top: Logo & Back Navigation */}
+          <div className="relative z-10 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <img src="/logo.png" alt="ZoraEcommerce Logo" className="w-8 h-8 object-contain rounded-lg" />
+              <div className="w-9 h-9 rounded-xl bg-white border border-white shadow-xs flex items-center justify-center p-1 shrink-0">
+                <ZoraLogo className="w-full h-full" />
+              </div>
               <span className="text-xl font-bold text-[#0F172A] tracking-tight font-['Plus_Jakarta_Sans']">
                 Zora<span className="text-[#ee4d2d]">Ecommerce</span>
               </span>
             </div>
+
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800 transition-colors group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
+              Trang chủ
+            </Link>
           </div>
 
-          {/* Minimalist Message */}
-          <div className="my-auto py-6">
-            <h2 className="text-2xl font-bold text-[#0F172A] tracking-tight font-['Plus_Jakarta_Sans'] mb-2">
-              Mua sắm tinh tế.
-            </h2>
-            <p className="text-xs text-slate-500 leading-relaxed max-w-xs">
-              Sản phẩm chọn lọc, bảo hành chính hãng và giao hàng hỏa tốc.
-            </p>
+          {/* Center: Editorial Typography + Seamlessly Blended 3D Art Piece */}
+          <div className="relative z-10 my-auto py-2">
+            
+            {/* Elegant Editorial Typography */}
+            <div className="mb-3 text-left">
+              <h2 className="text-2xl font-bold text-[#0F172A] tracking-tight font-['Plus_Jakarta_Sans'] leading-snug">
+                Mua sắm <span className="italic font-serif font-normal text-[#ee4d2d] text-[1.12em]">tinh tế</span>
+                <span className="block text-slate-700 font-medium text-lg mt-0.5 tracking-normal">
+                  & chuẩn gu từng khoảnh khắc.
+                </span>
+              </h2>
+              <p className="text-xs text-slate-500 font-light mt-1 leading-relaxed">
+                Đón nhận trải nghiệm mua sắm đẳng cấp và mở hộp đầy cảm hứng.
+              </p>
+            </div>
+
+            {/* Interactive 3D Perspective Canvas with Seamless Dissolve Mask */}
+            <div
+              onMouseMove={handleArtMouseMove}
+              onMouseLeave={handleArtMouseLeave}
+              style={{ perspective: 1000 }}
+              className="relative cursor-pointer select-none group"
+            >
+              <div
+                style={{
+                  transform: tilt.isHovered
+                    ? `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) scale3d(1.02, 1.02, 1.02)`
+                    : 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+                  transition: tilt.isHovered
+                    ? 'transform 0.15s ease-out'
+                    : 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transformStyle: 'preserve-3d',
+                }}
+                className="relative rounded-3xl overflow-hidden flex items-center justify-center"
+              >
+                {/* Clean Studio Boutique Shopping Bag & Gift Box with Seamless Radial Dissolve */}
+                <img
+                  src="/images/auth-art.jpg?v=2"
+                  alt="Zora Luxury Boutique Shopping Bag"
+                  style={{
+                    maskImage: 'radial-gradient(ellipse 90% 86% at 50% 50%, black 62%, transparent 96%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 90% 86% at 50% 50%, black 62%, transparent 96%)',
+                  }}
+                  className="w-full h-auto aspect-[3/4] max-h-[320px] object-cover object-center block transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+
+                {/* Dynamic Specular Light Glare tracking cursor */}
+                <div
+                  className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+                  style={{
+                    opacity: tilt.isHovered ? 0.3 : 0,
+                    background: `radial-gradient(circle 260px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.75), transparent 70%)`,
+                    maskImage: 'radial-gradient(ellipse 90% 86% at 50% 50%, black 62%, transparent 96%)',
+                    WebkitMaskImage: 'radial-gradient(ellipse 90% 86% at 50% 50%, black 62%, transparent 96%)',
+                  }}
+                />
+              </div>
+
+              {/* Soft ambient warm aura behind the artwork */}
+              <div
+                className="absolute inset-x-6 bottom-0 h-28 bg-gradient-to-t from-orange-400/10 via-amber-200/10 to-transparent -z-10 blur-2xl transition-all duration-700 pointer-events-none"
+                style={{
+                  transform: tilt.isHovered ? 'scale(1.08)' : 'scale(1)',
+                }}
+              />
+            </div>
           </div>
 
-          {/* Clean Subtle Footer */}
-          <div className="text-[11px] text-slate-400">
-            © 2026 ZoraEcommerce
+          {/* Bottom: Refined micro-proof */}
+          <div className="relative z-10 flex items-center justify-between text-[11px] text-slate-400 pt-3 border-t border-slate-300/40">
+            <span>© 2026 ZoraEcommerce</span>
+            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+              <span className="text-[#ee4d2d] animate-pulse">✦</span> Chuẩn mực thượng lưu
+            </span>
           </div>
         </div>
 
@@ -95,6 +283,25 @@ export default function LoginPage() {
         <div className="lg:col-span-7 p-8 sm:p-12 flex flex-col justify-center bg-white">
           <div className="w-full max-w-sm mx-auto">
             
+                        {/* Mobile Brand Header */}
+            <div className="lg:hidden flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-white border border-slate-200/60 shadow-xs flex items-center justify-center p-1 shrink-0">
+                  <ZoraLogo className="w-full h-full" />
+                </div>
+                <span className="font-bold text-lg text-[#0F172A] tracking-tight font-['Plus_Jakarta_Sans']">
+                  Zora<span className="text-[#ee4d2d]">Ecommerce</span>
+                </span>
+              </div>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                Trang chủ
+              </Link>
+            </div>
+
             {/* Header */}
             <div className="mb-7">
               <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight font-['Plus_Jakarta_Sans'] mb-1">
@@ -226,7 +433,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Social Logins - Minimalist Google & Apple */}
+            {/* Social Logins - Google & Facebook */}
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
@@ -257,10 +464,10 @@ export default function LoginPage() {
                 type="button"
                 className="h-10 flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 transition-all text-xs font-medium text-slate-700"
               >
-                <svg className="w-3.5 h-3.5 text-slate-900" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 0.93-2.85-.9.04-1.99.6-2.61 1.34-.55.63-1.03 1.68-.9 2.69 1 .08 2.03-.5 2.58-1.18z" />
+                <svg className="w-4 h-4 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                 </svg>
-                <span>Apple</span>
+                <span>Facebook</span>
               </button>
             </div>
 

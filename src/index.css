@@ -39,3 +39,82 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+
+/* ================= Luxury Background Animations ================= */
+@keyframes aurora-float-1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(50px, -40px, 0) scale(1.12) rotate(4deg);
+  }
+  66% {
+    transform: translate3d(-35px, 35px, 0) scale(0.92) rotate(-3deg);
+  }
+}
+
+@keyframes aurora-float-2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(-45px, 50px, 0) scale(0.95) rotate(-5deg);
+  }
+  66% {
+    transform: translate3d(40px, -30px, 0) scale(1.14) rotate(3deg);
+  }
+}
+
+@keyframes aurora-float-3 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(35px, 35px, 0) scale(1.08);
+  }
+}
+
+@keyframes ambient-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes sparkle-float {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.75;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(-80px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-aurora-1 {
+  animation: aurora-float-1 20s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-float-2 24s ease-in-out infinite;
+}
+
+.animate-aurora-3 {
+  animation: aurora-float-3 18s ease-in-out infinite;
+}
+
+.animate-ambient-pulse {
+  animation: ambient-pulse 8s ease-in-out infinite;
+}
