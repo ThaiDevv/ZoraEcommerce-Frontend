@@ -633,12 +633,6 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                         <span className="text-slate-800">
                           {user.email ? `${user.email.slice(0, 3)}***@${user.email.split('@')[1] || 'gmail.com'}` : 'chua_co_email'}
                         </span>
-                        <button
-                          type="button"
-                          className="text-[#ee4d2d] hover:underline text-[12px] cursor-pointer"
-                        >
-                          Thay Đổi
-                        </button>
                       </div>
                     </div>
 
