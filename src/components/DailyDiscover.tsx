@@ -209,7 +209,12 @@ const FALLBACK_PRODUCTS: ProductDisplayItem[] = [
   },
 ]
 
-export default function DailyDiscover() {
+interface DailyDiscoverProps {
+  searchKeyword?: string
+  categoryId?: number | null
+}
+
+export default function DailyDiscover({ searchKeyword, categoryId }: DailyDiscoverProps) {
   const [products, setProducts] = useState<ProductDisplayItem[]>([])
   const [activeTab, setActiveTab] = useState("all")
   const [currentPage, setCurrentPage] = useState(0)
@@ -234,6 +239,8 @@ export default function DailyDiscover() {
         const res = await productApi.getProducts({
           page: pageIndex,
           size: 12,
+          keyword: searchKeyword?.trim() || undefined,
+          categoryId: categoryId || undefined,
           sortBy,
           sortDir,
         })
@@ -288,7 +295,7 @@ export default function DailyDiscover() {
         setIsLoadingMore(false)
       }
     },
-    [activeTab]
+    [activeTab, searchKeyword, categoryId]
   )
 
   // Reset & load when activeTab changes
@@ -308,14 +315,14 @@ export default function DailyDiscover() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         
         {/* ================= 1. TAB HEADER: GỢI Ý HÔM NAY ================= */}
-        <div className="bg-white rounded-xl p-3.5 shadow-xs border border-slate-200/80">
+        <div className="bg-white rounded-md p-3.5 shadow-xs border border-slate-200/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             
             {/* Title: GỢI Ý HÔM NAY (Đơn giản, tách biệt) */}
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#ee4d2d] rounded-full" />
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                GỢI Ý HÔM NAY
+                {searchKeyword ? `KẾT QUẢ TÌM KIẾM: "${searchKeyword}"` : (categoryId ? "SẢN PHẨM THEO DANH MỤC" : "GỢI Ý HÔM NAY")}
               </h2>
             </div>
 
@@ -330,7 +337,7 @@ export default function DailyDiscover() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-md font-medium transition-all cursor-pointer ${
                     activeTab === tab.id
                       ? "bg-[#ee4d2d] text-white shadow-xs"
                       : "bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/80"
@@ -348,8 +355,8 @@ export default function DailyDiscover() {
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 py-6">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl p-3 space-y-3 animate-pulse border border-slate-200/60">
-                <div className="w-full aspect-square bg-slate-200 rounded-lg" />
+              <div key={i} className="bg-white rounded-md p-3 space-y-3 animate-pulse border border-slate-200/60">
+                <div className="w-full aspect-square bg-slate-200 rounded-md" />
                 <div className="h-3 bg-slate-200 rounded w-3/4" />
                 <div className="h-3 bg-slate-200 rounded w-1/2" />
                 <div className="h-4 bg-slate-200 rounded w-1/3" />
@@ -362,7 +369,7 @@ export default function DailyDiscover() {
               <Link
                 key={item.id}
                 to={`/product/${item.slug || item.id}`}
-                className="group bg-white rounded-xl overflow-hidden border border-slate-200/80 hover:border-[#ee4d2d] shadow-2xs hover:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between hover:-translate-y-1 relative"
+                className="group bg-white rounded-md overflow-hidden border border-slate-200/80 hover:border-[#ee4d2d] shadow-2xs hover:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between hover:-translate-y-1 relative"
               >
                 {/* Product Image & Badges */}
                 <div className="relative w-full aspect-square bg-slate-50 overflow-hidden">
@@ -378,7 +385,7 @@ export default function DailyDiscover() {
                   </span>
 
                   {/* Discount Tag */}
-                  <span className="absolute top-0 right-0 z-10 bg-yellow-400 text-[#ee4d2d] text-[10px] font-black px-1.5 py-0.5 rounded-bl-lg shadow-xs">
+                  <span className="absolute top-0 right-0 z-10 bg-yellow-400 text-[#ee4d2d] text-[10px] font-black px-1.5 py-0.5 rounded-bl-md shadow-xs">
                     {item.discount}
                   </span>
 
@@ -444,7 +451,7 @@ export default function DailyDiscover() {
               <button
                 onClick={handleLoadMore}
                 disabled={isLoadingMore}
-                className="px-10 py-2.5 rounded-xl border border-slate-300 hover:border-[#ee4d2d] bg-white hover:bg-orange-50/40 text-slate-700 hover:text-[#ee4d2d] text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-2 group"
+                className="px-10 py-2.5 rounded-md border border-slate-300 hover:border-[#ee4d2d] bg-white hover:bg-orange-50/40 text-slate-700 hover:text-[#ee4d2d] text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-2 group"
               >
                 {isLoadingMore ? (
                   <>

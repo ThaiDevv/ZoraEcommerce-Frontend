@@ -41,6 +41,21 @@ export default function LoginPage() {
   }
 
   // Interactive 3D Perspective Tilt & Specular Light for artwork
+  // Nếu đã đăng nhập với vai trò ADMIN thì chuyển thẳng vào Admin Dashboard
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+      const storedUser = localStorage.getItem('user')
+      if (token && storedUser) {
+        const u = JSON.parse(storedUser)
+        const role = u.role || ''
+        if (role.includes('ADMIN') || role === 'ROLE_ADMIN' || role === 'ADMIN') {
+          navigate('/admin/dashboard', { replace: true })
+        }
+      }
+    } catch {}
+  }, [navigate])
+
   const [tilt, setTilt] = useState({
     rotateX: 0,
     rotateY: 0,
@@ -116,17 +131,35 @@ export default function LoginPage() {
         }
       }
 
-      // Fetch user profile info
+      // Fetch user profile info & check role for smart redirection
+      let userRole = ''
       try {
         const profile = await authApi.getProfile()
         if (profile) {
           localStorage.setItem('user', JSON.stringify(profile))
+          userRole = profile.role || ''
         }
       } catch (profileErr) {
         console.warn('Could not fetch user profile details:', profileErr)
       }
 
-      navigate('/')
+      window.dispatchEvent(new Event('authChanged'))
+      window.dispatchEvent(new Event('cartUpdated'))
+
+      // Lấy đường dẫn chuyển tiếp nếu có (VD: quay lại /checkout hoặc /cart)
+      const redirectUrl =
+        new URLSearchParams(location.search).get('redirect') ||
+        (location.state as any)?.from ||
+        '/'
+
+      // Phân quyền điều hướng:
+      // - ADMIN: chuyển hướng vào Kênh Quản Trị (/admin/dashboard)
+      // - SELLER & BUYER: chuyển về Trang Chủ '/' (hoặc trang trước đó nếu có redirect)
+      if (userRole.includes('ADMIN') || userRole === 'ROLE_ADMIN' || userRole === 'ADMIN') {
+        navigate('/admin/dashboard', { replace: true })
+      } else {
+        navigate(redirectUrl, { replace: true })
+      }
     } catch (err: any) {
       setErrorMessage(err?.message || 'Email hoặc mật khẩu không chính xác')
     } finally {
@@ -423,6 +456,31 @@ export default function LoginPage() {
                     />
                     <span>Ghi nhớ đăng nhập</span>
                   </label>
+                </div>
+
+                {/* Quick Demo Fill Buttons */}
+                <div className="flex items-center gap-1.5 text-[11px] text-slate-500 bg-slate-50 p-2 rounded-lg border border-slate-100">
+                  <span className="font-medium text-slate-600">Thử nhanh:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('buyer2@zorashop.com')
+                      setPassword('Password123@')
+                    }}
+                    className="px-2 py-0.5 bg-white border border-slate-200 hover:border-[#ee4d2d] hover:text-[#ee4d2d] rounded-md transition-colors cursor-pointer"
+                  >
+                    Buyer (buyer2)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail('thaidev_admin@zorashop.com')
+                      setPassword('Password123@')
+                    }}
+                    className="px-2 py-0.5 bg-white border border-slate-200 hover:border-[#ee4d2d] hover:text-[#ee4d2d] rounded-md transition-colors cursor-pointer"
+                  >
+                    Admin (Thai)
+                  </button>
                 </div>
 
                 {/* Submit Button */}

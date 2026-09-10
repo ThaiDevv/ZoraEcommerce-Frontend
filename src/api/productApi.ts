@@ -7,6 +7,7 @@ export interface GetProductsParams {
   size?: number
   keyword?: string
   categoryId?: number
+  shopId?: number
   minPrice?: number
   maxPrice?: number
   sortBy?: 'CREATED_DATE' | 'PRICE' | 'SOLD_COUNT' | 'RATING_AVG' | string

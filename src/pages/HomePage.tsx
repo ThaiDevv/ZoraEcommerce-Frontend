@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
+import { useSearchParams, useNavigate } from "react-router-dom"
 import { ArrowUp } from "lucide-react"
 import MainHeader from "../components/MainHeader"
-import SubtleBackground from "../components/SubtleBackground"
 import BannerSlider from "../components/BannerSlider"
 import FeaturedCategories from "../components/FeaturedCategories"
 import PromoBanner from "../components/PromoBanner"
@@ -12,6 +12,23 @@ import AuthFooter from "../components/AuthFooter"
 
 export default function HomePage() {
   const [showScrollTop, setShowScrollTop] = useState(false)
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+
+  // Tách rời giao diện: Nếu là tài khoản ADMIN đã đăng nhập, tự động chuyển vào Admin Dashboard
+  useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem("user")
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+      if (token && storedUser) {
+        const u = JSON.parse(storedUser)
+        const role = u.role || ""
+        if ((role.includes("ADMIN") || role === "ROLE_ADMIN" || role === "ADMIN") && !searchParams.get("preview")) {
+          navigate("/admin/dashboard", { replace: true })
+        }
+      }
+    } catch {}
+  }, [searchParams, navigate])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,8 +49,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800 antialiased relative selection:bg-orange-100 selection:text-[#ee4d2d]">
-      {/* Background nhẹ nhàng, tinh tế, êm dịu cho mắt */}
-      <SubtleBackground />
 
       {/* 1. Header with Search Bar, Suggestion Chips, Cart Logo (Sticky z-50) */}
       <div className="relative z-50">
@@ -45,8 +60,14 @@ export default function HomePage() {
         {/* 2. Hero Banner Slider + 2 Side Banners + 8 Quick Service Badges */}
         <BannerSlider />
 
-        {/* 3. Featured Categories */}
-        <FeaturedCategories />
+        {/* 3. Featured Categories - Click chuyển sang trang tìm kiếm theo danh mục */}
+        <FeaturedCategories
+          onSelectCategory={(id) => {
+            if (id) {
+              navigate(`/search?categoryId=${id}`)
+            }
+          }}
+        />
 
         {/* 4. Secondary Promotional Banner (Mega Sale) */}
         <PromoBanner />
@@ -54,7 +75,7 @@ export default function HomePage() {
         {/* 5. Top Search Products */}
         <TopSearchSection />
 
-        {/* 6. Daily Discover Products (Gợi ý hôm nay) */}
+        {/* 6. Daily Discover Products: Luôn luôn hiển thị Gợi Ý Hôm Nay thuần túy, không bị đè che */}
         <DailyDiscover />
 
         {/* 7. Comprehensive 5-Column Category Tree */}

@@ -1,12 +1,15 @@
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Flame, ChevronRight, TrendingUp } from "lucide-react"
+import { productApi } from "../api/productApi"
 
-// Pure Mock Data for Top Search Products (Tính năng mock hoàn toàn theo yêu cầu)
+// Fallback Mock Data for Top Search Products (khi backend chưa có dữ liệu)
 const MOCK_TOP_SEARCH_PRODUCTS = [
   {
     id: 1,
     rank: 1,
     name: "Áo Thun Nam Cổ Tròn Cotton 100% Co Giãn 4 Chiều Basic",
+    slug: "ao-thun-nam-cotton-100",
     sales: "Bán 68.2k+ / tháng",
     price: "159.000₫",
     image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=400&auto=format&fit=crop&q=80",
@@ -16,50 +19,109 @@ const MOCK_TOP_SEARCH_PRODUCTS = [
     id: 2,
     rank: 2,
     name: "Tai Nghe Không Dây Bluetooth 5.3 Chống Ồn ENC Pro",
+    slug: "tai-nghe-sony-wh-1000xm5",
     sales: "Bán 45.1k+ / tháng",
     price: "389.000₫",
-    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop&q=80",
     badgeColor: "bg-gradient-to-r from-slate-400 to-slate-600 text-white shadow-slate-500/20",
   },
   {
     id: 3,
     rank: 3,
-    name: "Kem Chống Nắng Kiềm Dầu Nâng Tông Tự Nhiên 50ml",
+    name: "Giày Thể Thao Sneaker Nam Nữ Nike Air Force 1 07 All White",
+    slug: "nike-air-force-1-07-white",
     sales: "Bán 39.4k+ / tháng",
-    price: "265.000₫",
-    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&auto=format&fit=crop&q=80",
+    price: "2.590.000₫",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop&q=80",
     badgeColor: "bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-orange-500/20",
   },
   {
     id: 4,
     rank: 4,
-    name: "Nồi Chiên Không Dầu Điện Tử 6.5L Đa Năng Cao Cấp",
+    name: "Apple iPhone 16 Pro Max 256GB Titan Tự Nhiên VN/A",
+    slug: "apple-iphone-16-pro-max-256gb",
     sales: "Bán 28.7k+ / tháng",
-    price: "890.000₫",
-    image: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=400&auto=format&fit=crop&q=80",
+    price: "34.990.000₫",
+    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&auto=format&fit=crop&q=80",
     badgeColor: "bg-slate-800 text-white",
   },
   {
     id: 5,
     rank: 5,
-    name: "Giày Sneaker Unisex Cổ Thấp Phong Cách Trẻ Trung Năng Động",
+    name: "Đồng Hồ Thông Minh Apple Watch Series 9 GPS 41mm",
+    slug: "apple-watch-series-9-41mm",
     sales: "Bán 24.3k+ / tháng",
-    price: "310.000₫",
-    image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&auto=format&fit=crop&q=80",
+    price: "8.790.000₫",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&auto=format&fit=crop&q=80",
     badgeColor: "bg-slate-800 text-white",
   },
   {
     id: 6,
     rank: 6,
-    name: "Bàn Phím Cơ Không Dây 3 Chế Độ Kết Nối RGB Hot-swap",
+    name: "Bàn Phím Cơ Không Dây NuPhy Air75 V2 Low-Profile",
+    slug: "ban-phim-nuphy-air75-v2",
     sales: "Bán 19.8k+ / tháng",
-    price: "580.000₫",
+    price: "2.890.000₫",
     image: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&auto=format&fit=crop&q=80",
     badgeColor: "bg-slate-800 text-white",
   },
 ]
 
+export interface TopProductItem {
+  id: number
+  rank: number
+  name: string
+  slug: string
+  sales: string
+  price: string
+  image: string
+  badgeColor: string
+}
+
 export default function TopSearchSection() {
+  const [items, setItems] = useState<TopProductItem[]>(MOCK_TOP_SEARCH_PRODUCTS)
+
+  useEffect(() => {
+    const fetchTopSold = async () => {
+      try {
+        const res = await productApi.getTopSoldProducts(6)
+        if (res?.items && res.items.length > 0) {
+          const badgeColors = [
+            "bg-gradient-to-r from-amber-400 to-amber-600 text-white shadow-amber-500/20",
+            "bg-gradient-to-r from-slate-400 to-slate-600 text-white shadow-slate-500/20",
+            "bg-gradient-to-r from-amber-600 to-orange-700 text-white shadow-orange-500/20",
+            "bg-slate-800 text-white",
+            "bg-slate-800 text-white",
+            "bg-slate-800 text-white",
+          ]
+
+          const mapped: TopProductItem[] = res.items.map((prod, idx) => {
+            const soldCount = prod.soldCount || (1000 - idx * 100)
+            const salesText = soldCount >= 1000 
+              ? `Bán ${(soldCount / 1000).toFixed(1)}k+ / tháng` 
+              : `Bán ${soldCount}+ / tháng`
+
+            return {
+              id: prod.id,
+              rank: idx + 1,
+              name: prod.name,
+              slug: prod.slug || String(prod.id),
+              sales: salesText,
+              price: Number(prod.price).toLocaleString("vi-VN") + "₫",
+              image: prod.primaryImageUrl || MOCK_TOP_SEARCH_PRODUCTS[idx % MOCK_TOP_SEARCH_PRODUCTS.length].image,
+              badgeColor: badgeColors[idx] || "bg-slate-800 text-white",
+            }
+          })
+          setItems(mapped)
+        }
+      } catch (err) {
+        console.warn("Using fallback mock for top search products:", err)
+      }
+    }
+
+    fetchTopSold()
+  }, [])
+
   return (
     <section className="w-full py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +129,7 @@ export default function TopSearchSection() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-200">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-orange-100 text-[#ee4d2d] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-orange-100 text-[#ee4d2d] flex items-center justify-center">
               <Flame className="w-5 h-5 text-[#ee4d2d]" />
             </div>
             <div>
@@ -81,24 +143,24 @@ export default function TopSearchSection() {
                 </span>
               </div>
               <p className="text-[12px] text-slate-400">
-                Các sản phẩm có lượt tìm kiếm và chọn mua nhiều nhất 24 giờ qua
+                Các sản phẩm bán chạy nhất hệ thống kết nối trực tiếp từ máy chủ
               </p>
             </div>
           </div>
 
-          <button className="text-xs font-semibold text-[#ee4d2d] hover:text-[#d93c1d] flex items-center gap-1 self-start sm:self-center transition-colors cursor-pointer group">
+          <Link to="/" className="text-xs font-semibold text-[#ee4d2d] hover:text-[#d93c1d] flex items-center gap-1 self-start sm:self-center transition-colors cursor-pointer group">
             <span>Xem tất cả top tìm kiếm</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+          </Link>
         </div>
 
         {/* Top Search Grid (6 products on desktop, 3 on tablet, 2 on mobile) */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-          {MOCK_TOP_SEARCH_PRODUCTS.map((product) => (
+          {items.map((product) => (
             <Link
               key={product.id}
-              to={`/product/${product.id}`}
-              className="group bg-white rounded-xl overflow-hidden border border-slate-200/80 hover:border-[#ee4d2d] shadow-2xs hover:shadow-md transition-all duration-200 cursor-pointer flex flex-col justify-between hover:-translate-y-1 relative"
+              to={`/product/${product.slug || product.id}`}
+              className="group bg-white rounded-md overflow-hidden border border-slate-200/80 hover:border-[#ee4d2d] transition-colors cursor-pointer flex flex-col justify-between relative"
             >
               {/* TOP Rank Badge */}
               <div className="relative w-full aspect-square bg-slate-50 overflow-hidden">

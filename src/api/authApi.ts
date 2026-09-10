@@ -1,15 +1,15 @@
-import axiosClient from './axiosClient'
+import axiosClient from "./axiosClient"
 import type {
   LoginRequest,
   RegisterRequest,
   LoginResponse,
   RegisterResponse,
   User
-} from '../types/auth'
+} from "../types/auth"
 
 export const authApi = {
   login: async (credentials: LoginRequest): Promise<LoginResponse> => {
-    const res = await axiosClient.post<any, LoginResponse>('/auth/login', {
+    const res = await axiosClient.post<any, LoginResponse>("/auth/login", {
       email: credentials.email.trim().toLowerCase(),
       password: credentials.password,
     })
@@ -25,17 +25,32 @@ export const authApi = {
       fullName: data.fullName.trim(),
       phone: data.phone?.trim() ? data.phone.trim() : null,
     }
-    const res = await axiosClient.post<any, RegisterResponse>('/auth/register', payload)
+    const res = await axiosClient.post<any, RegisterResponse>("/auth/register", payload)
     return res as unknown as RegisterResponse
   },
 
   getProfile: async (): Promise<User> => {
-    const res = await axiosClient.get<any, User>('/users/me')
+    const res = await axiosClient.get<any, User>("/users/me")
     return res as unknown as User
   },
 
   updateProfile: async (data: Partial<User>): Promise<User> => {
-    const res = await axiosClient.put<any, User>('/users/me', data)
+    const res = await axiosClient.put<any, User>("/users/me", data)
     return res as unknown as User
+  },
+
+  changePassword: async (oldPassword: string, newPassword: string): Promise<boolean> => {
+    const res = await axiosClient.put<any, boolean>("/users/me/password", {
+      oldPassword,
+      newPassword,
+    })
+    return res
+  },
+
+  uploadAvatar: async (url: string): Promise<string> => {
+    const res = await axiosClient.post<any, string>("/users/me/avatar", null, {
+      params: { url },
+    })
+    return res
   },
 }

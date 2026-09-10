@@ -2,13 +2,18 @@ import axiosClient from './axiosClient'
 
 export interface BackendCartItem {
   id: number
-  productId: number
+  variantId?: number
+  sku: string
   productName: string
-  productImage?: string
   variantName?: string
   price: number
+  originalPrice?: number
   quantity: number
-  totalPrice: number
+  stock: number
+  imageUrl?: string
+  productImage?: string
+  totalPrice?: number
+  selected?: boolean
 }
 
 export interface BackendCartShopGroup {
@@ -16,6 +21,7 @@ export interface BackendCartShopGroup {
   shopName: string
   shopLogo?: string
   cartItems: BackendCartItem[]
+  selected?: boolean
 }
 
 export interface BackendCartResponse {

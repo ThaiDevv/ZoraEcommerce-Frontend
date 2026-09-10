@@ -58,6 +58,7 @@ export interface ProductSummaryResponse {
   ratingCount?: number
   soldCount?: number
   shopName?: string
+  shopId?: number
 }
 
 export interface Product {

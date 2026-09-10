@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { 
   Search, 
   ShoppingCart, 
@@ -9,7 +9,8 @@ import {
   Phone, 
   ChevronDown,
   QrCode,
-  PackageCheck
+  PackageCheck,
+  ShieldCheck
 } from "lucide-react"
 import ZoraLogo from "./ZoraLogo"
 import { cartApi, type BackendCartItem } from "../api/cartApi"
@@ -26,8 +27,49 @@ const SEARCH_SUGGESTIONS = [
 ]
 
 export default function MainHeader() {
+  // Helper to check if current user already has a shop
+  const isUserSeller = (): boolean => {
+    try {
+      const storedUser = localStorage.getItem("user")
+      if (storedUser) {
+        const u = JSON.parse(storedUser)
+        const role = u.role || ""
+        if (role.includes("SELLER") || role === "ROLE_SELLER" || role === "SELLER") {
+          return true
+        }
+      }
+      if (localStorage.getItem("current_seller_shop")) {
+        return true
+      }
+    } catch {}
+    return false
+  }
+
+  const isUserAdmin = (): boolean => {
+    try {
+      const storedUser = localStorage.getItem("user")
+      if (storedUser) {
+        const u = JSON.parse(storedUser)
+        const role = u.role || ""
+        if (role.includes("ADMIN") || role === "ROLE_ADMIN" || role === "ADMIN") {
+          return true
+        }
+      }
+    } catch {}
+    return false
+  }
+
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchParams] = useSearchParams()
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("keyword") || "")
+
+  // Đồng bộ search input khi keyword trên URL thay đổi
+  useEffect(() => {
+    const kw = searchParams.get("keyword")
+    if (kw !== null) {
+      setSearchQuery(kw)
+    }
+  }, [searchParams])
   const [isCartHovered, setIsCartHovered] = useState(false)
   const [isAppQrHovered, setIsAppQrHovered] = useState(false)
   const [isNotifHovered, setIsNotifHovered] = useState(false)
@@ -44,44 +86,115 @@ export default function MainHeader() {
     }>
   >([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [currentUser, setCurrentUser] = useState<{
+    name: string
+    avatar: string
+    role?: string
+  } | null>(null)
+  const [isUserMenuHovered, setIsUserMenuHovered] = useState(false)
 
-  // Check login & fetch cart on mount
+  // Check login & fetch cart on mount + sync on cartUpdated
   useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token")
-    if (token) {
-      setIsLoggedIn(true)
-      cartApi
-        .getCart()
-        .then((res) => {
-          if (res) {
-            setCartCount(res.totalItem || 0)
-            const allItems: BackendCartItem[] = res.shopGroups?.flatMap((g) => g.cartItems) || []
-            if (allItems.length > 0) {
-              setCartPreviewItems(
-                allItems.slice(0, 5).map((item) => ({
-                  id: item.id,
-                  name: item.productName,
-                  price: Number(item.price).toLocaleString("vi-VN") + "₫",
-                  image: item.productImage || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150",
-                  variant: item.variantName || "Mặc định",
-                }))
-              )
-            } else {
-              setCartPreviewItems([])
-            }
+    const syncCart = () => {
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+      const storedUsername = localStorage.getItem("username")
+      const storedUser = localStorage.getItem("user")
+
+      if (token || storedUsername) {
+        setIsLoggedIn(true)
+        try {
+          if (storedUser) {
+            const u = JSON.parse(storedUser)
+            setCurrentUser({
+              name: u.fullName || u.username || storedUsername || "thaimuado12",
+              avatar: u.avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80",
+              role: u.role || "",
+            })
+          } else {
+            setCurrentUser({
+              name: storedUsername || "thaimuado12",
+              avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80",
+            })
           }
-        })
-        .catch((err) => {
-          console.warn("Lỗi tải giỏ hàng:", err)
+        } catch {
+          setCurrentUser({
+            name: storedUsername || "thaimuado12",
+            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80",
+          })
+        }
+
+        cartApi
+          .getCart()
+          .then((res) => {
+            if (res) {
+              setCartCount(res.totalItem || 0)
+              const allItems: BackendCartItem[] = res.shopGroups?.flatMap((g) => g.cartItems) || []
+              if (allItems.length > 0) {
+                setCartPreviewItems(
+                  allItems.slice(0, 5).map((item) => ({
+                    id: item.id,
+                    name: item.productName,
+                    price: Number(item.price).toLocaleString("vi-VN") + "₫",
+                    image: item.imageUrl || item.productImage || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150",
+                    variant: item.variantName || "Mặc định",
+                  }))
+                )
+              } else {
+                setCartPreviewItems([])
+              }
+            }
+          })
+          .catch(() => {
+            setCartCount(0)
+            setCartPreviewItems([])
+          })
+      } else {
+        setIsLoggedIn(false)
+        try {
+          const guestItems = JSON.parse(localStorage.getItem("zora_guest_cart") || "[]")
+          const total = guestItems.reduce((s: number, it: any) => s + (it.quantity || 1), 0)
+          setCartCount(total)
+          setCartPreviewItems(
+            guestItems.slice(0, 5).map((item: any) => ({
+              id: item.id,
+              name: item.productName || item.name,
+              price: Number(item.price).toLocaleString("vi-VN") + "₫",
+              image: item.imageUrl || item.productImage || "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150",
+              variant: item.variantName || "Mặc định",
+            }))
+          )
+        } catch {
           setCartCount(0)
           setCartPreviewItems([])
-        })
-    } else {
-      setIsLoggedIn(false)
-      setCartCount(0)
-      setCartPreviewItems([])
+        }
+      }
+    }
+
+    syncCart()
+    window.addEventListener("cartUpdated", syncCart)
+    window.addEventListener("authChanged", syncCart)
+    window.addEventListener("storage", syncCart)
+    return () => {
+      window.removeEventListener("cartUpdated", syncCart)
+      window.removeEventListener("authChanged", syncCart)
+      window.removeEventListener("storage", syncCart)
     }
   }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("refreshToken")
+    localStorage.removeItem("user")
+    localStorage.removeItem("username")
+    sessionStorage.removeItem("token")
+    setIsLoggedIn(false)
+    setCurrentUser(null)
+    setCartCount(0)
+    setCartPreviewItems([])
+    window.dispatchEvent(new Event("cartUpdated"))
+    navigate("/")
+    window.location.reload()
+  }
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -101,15 +214,26 @@ export default function MainHeader() {
       <div className="bg-[#0f172a] text-slate-300 text-[12px] font-normal border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-8 flex items-center justify-between">
           
-          {/* Top Left Links */}
+          {/* Top Left Links: Nếu là ADMIN thì hiển thị Kênh Quản Trị, ngược lại Kênh Người Bán */}
           <div className="flex items-center gap-4">
-            <Link 
-              to="/seller/register" 
-              className="hover:text-white transition-colors flex items-center gap-1.5 font-medium"
-            >
-              <PackageCheck className="w-3.5 h-3.5 text-[#ee4d2d]" />
-              <span>Kênh Người Bán</span>
-            </Link>
+            {isUserAdmin() ? (
+              <Link 
+                to="/admin/dashboard" 
+                className="hover:text-white transition-colors flex items-center gap-1.5 font-medium"
+                title="Kênh Quản Trị Hệ Thống"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-[#ee4d2d]" />
+                <span>Kênh Quản Trị</span>
+              </Link>
+            ) : (
+              <Link 
+                to={isUserSeller() ? "/seller/orders" : "/seller/register"} 
+                className="hover:text-white transition-colors flex items-center gap-1.5 font-medium"
+              >
+                <PackageCheck className="w-3.5 h-3.5 text-[#ee4d2d]" />
+                <span>Kênh Người Bán</span>
+              </Link>
+            )}
             
             <span className="text-slate-700 hidden sm:inline">|</span>
             
@@ -236,24 +360,59 @@ export default function MainHeader() {
 
             <span className="text-slate-700">|</span>
 
-            {/* Auth Links / Profile */}
+            {/* Auth Links / Profile Dropdown (Exact Shopee match) */}
             {isLoggedIn ? (
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-200">Tài khoản của tôi</span>
-                <span className="text-slate-600">/</span>
-                <button
-                  onClick={() => {
-                    localStorage.removeItem("token")
-                    sessionStorage.removeItem("token")
-                    setIsLoggedIn(false)
-                    setCartCount(0)
-                    setCartPreviewItems([])
-                    window.location.reload()
-                  }}
-                  className="font-medium text-slate-200 hover:text-[#ee4d2d] transition-colors cursor-pointer"
-                >
-                  Đăng Xuất
-                </button>
+              <div
+                className="relative py-1 cursor-pointer"
+                onMouseEnter={() => setIsUserMenuHovered(true)}
+                onMouseLeave={() => setIsUserMenuHovered(false)}
+              >
+                <div className="flex items-center gap-2 text-slate-200 hover:text-[#ee4d2d] transition-colors py-0.5">
+                  <div className="w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full overflow-hidden border border-slate-500 shrink-0 bg-slate-700">
+                    <img
+                      src={
+                        currentUser?.avatar ||
+                        "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80"
+                      }
+                      alt={currentUser?.name || "thaimuado12"}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="font-normal text-[12px] text-slate-200 hover:text-[#ee4d2d] max-w-[120px] truncate">
+                    {currentUser?.name || "thaimuado12"}
+                  </span>
+                </div>
+
+                {/* Dropdown Menu (Exact Shopee match with upward triangle) */}
+                {isUserMenuHovered && (
+                  <div className="absolute right-0 top-full pt-1.5 z-50 animate-in fade-in duration-150">
+                    <div className="relative w-40 sm:w-44 bg-white rounded-xs shadow-xl border border-slate-100 text-slate-800 py-1 select-none">
+                      {/* Triangle Pointer pointing up to avatar/username */}
+                      <div className="absolute -top-1.5 right-6 w-3 h-3 bg-white border-t border-l border-slate-100 rotate-45 shadow-2xs" />
+
+                      <Link
+                        to="/user/profile"
+                        className="block w-full px-4 py-2.5 text-left text-[13px] text-slate-700 hover:text-[#ee4d2d] hover:bg-slate-50 transition-colors cursor-pointer leading-normal"
+                      >
+                        Tài Khoản Của Tôi
+                      </Link>
+
+                      <Link
+                        to="/user/orders"
+                        className="block w-full px-4 py-2.5 text-left text-[13px] text-slate-700 hover:text-[#ee4d2d] hover:bg-slate-50 transition-colors cursor-pointer leading-normal"
+                      >
+                        Đơn Mua
+                      </Link>
+
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full px-4 py-2.5 text-left text-[13px] text-slate-700 hover:text-[#ee4d2d] hover:bg-slate-50 transition-colors cursor-pointer leading-normal border-t border-slate-50"
+                      >
+                        Đăng Xuất
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -362,7 +521,7 @@ export default function MainHeader() {
             >
               <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
               {/* Badge Item Count: Chỉ hiện khi ĐÃ ĐĂNG NHẬP và CÓ HÀNG trong giỏ */}
-              {isLoggedIn && cartCount > 0 && (
+              {cartCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-[#ee4d2d] text-white text-[11px] font-bold h-5 min-w-[20px] px-1 rounded-full flex items-center justify-center border-2 border-white shadow-xs">
                   {cartCount > 99 ? "99+" : cartCount}
                 </span>

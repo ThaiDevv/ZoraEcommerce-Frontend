@@ -181,7 +181,7 @@ export default function BannerSlider() {
                       {slide.subtitle}
                     </p>
                     <div className="mt-4">
-                      <button className="px-4 py-2 bg-white hover:bg-[#ee4d2d] text-slate-900 hover:text-white rounded-lg text-xs font-bold tracking-wide transition-all shadow-md inline-flex items-center gap-1.5 cursor-pointer group/btn">
+                      <button className="px-4 py-2 bg-white hover:bg-[#ee4d2d] text-slate-900 hover:text-white rounded-md text-xs font-bold tracking-wide transition-all shadow-xs inline-flex items-center gap-1.5 cursor-pointer group/btn">
                         <span>{slide.cta}</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
                       </button>
@@ -227,7 +227,7 @@ export default function BannerSlider() {
           {/* 2 Side Banners (4 cols on lg) */}
           <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3.5">
             {/* Top Side Banner */}
-            <div className="flex-1 rounded-xl overflow-hidden relative group cursor-pointer shadow-xs border border-orange-100 bg-gradient-to-br from-orange-500 to-[#ee4d2d] p-5 text-white flex flex-col justify-between min-h-[140px] sm:min-h-[160px]">
+            <div className="flex-1 rounded-md overflow-hidden relative group cursor-pointer shadow-xs border border-orange-100 bg-gradient-to-br from-orange-500 to-[#ee4d2d] p-5 text-white flex flex-col justify-between min-h-[140px] sm:min-h-[160px]">
               <div className="relative z-10">
                 <span className="px-2 py-0.5 rounded bg-white/20 text-[10px] font-bold tracking-wide uppercase">
                   VOUCHER XTRA
@@ -254,7 +254,7 @@ export default function BannerSlider() {
             </div>
 
             {/* Bottom Side Banner */}
-            <div className="flex-1 rounded-xl overflow-hidden relative group cursor-pointer shadow-xs border border-blue-100 bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white flex flex-col justify-between min-h-[140px] sm:min-h-[160px]">
+            <div className="flex-1 rounded-md overflow-hidden relative group cursor-pointer shadow-xs border border-blue-100 bg-gradient-to-br from-slate-900 to-slate-800 p-5 text-white flex flex-col justify-between min-h-[140px] sm:min-h-[160px]">
               <div className="relative z-10">
                 <span className="px-2 py-0.5 rounded bg-[#ee4d2d] text-[10px] font-bold tracking-wide uppercase">
                   FREESHIP 0Đ
@@ -290,7 +290,7 @@ export default function BannerSlider() {
                 key={item.id}
                 className="group flex flex-col items-center text-center p-2 rounded-xl hover:bg-orange-50/50 cursor-pointer transition-all duration-150"
               >
-                <div className={`w-11 h-11 rounded-2xl ${item.color} flex items-center justify-center shadow-xs group-hover:-translate-y-1 transition-transform duration-200`}>
+                <div className={`w-11 h-11 rounded-lg ${item.color} flex items-center justify-center shadow-xs group-hover:-translate-y-1 transition-transform duration-200`}>
                   <Icon className="w-5 h-5" />
                 </div>
                 <span className="text-[12px] font-medium text-slate-700 group-hover:text-[#ee4d2d] mt-2 line-clamp-1 transition-colors">

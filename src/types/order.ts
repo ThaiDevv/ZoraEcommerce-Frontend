@@ -3,8 +3,9 @@ export type OrderStatus =
   | 'CONFIRMED'
   | 'SHIPPING'
   | 'DELIVERED'
-  | 'COMPLETED'
   | 'CANCELLED'
+  | 'REFUNDED'
+  | 'COMPLETED'
 
 export type PaymentMethod = 'COD' | 'VNPAY' | 'WALLET'
 
@@ -18,6 +19,30 @@ export interface OrderItemResponse {
   price: number
   quantity: number
   totalPrice: number
+}
+
+export interface HistoryOrderItem {
+  orderItemId: number
+  productId: number
+  productName: string
+  productPictureUrl?: string
+  variantName?: string
+  price: number
+  quantity: number
+  subTotal: number
+}
+
+export interface HistoryOrder {
+  orderId: number
+  orderNumber: string
+  shopId: number
+  shopAvatarUrl?: string
+  shopName: string
+  totalAmount: number
+  subTotal: number
+  status: OrderStatus
+  createDate: string
+  items: HistoryOrderItem[]
 }
 
 export interface AddressResponse {
@@ -56,4 +81,37 @@ export interface CreateOrderRequest {
     variantId: number
     quantity: number
   }[]
+}
+
+export interface DetailOrderItem {
+  id: number
+  variantId: number
+  productName: string
+  productId: number
+  productPictureUrl?: string
+  variantName?: string
+  price: number
+  quantity: number
+  subtotal: number
+}
+
+export interface DetailOrderResponse {
+  orderId: number
+  shopId: number
+  paymentId?: number
+  orderNumber: string
+  method: 'COD' | 'BANK_TRANSFER' | 'VNPAY' | 'MOMO' | 'CREDIT_CARD'
+  transactionId?: string
+  shopName: string
+  logoUrl?: string
+  nameReceive: string
+  phoneReceive: string
+  address: string
+  subtotal: number
+  shippingFee: number
+  discountAmount: number
+  totalAmount: number
+  statusType: OrderStatus
+  createdDate: string
+  orderItemResponses: DetailOrderItem[]
 }

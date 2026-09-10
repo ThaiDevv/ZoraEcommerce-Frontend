@@ -31,7 +31,7 @@ export default function PromoBanner() {
   return (
     <section className="w-full py-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-2xl overflow-hidden shadow-md bg-gradient-to-r from-[#b91c1c] via-[#ee4d2d] to-[#ea580c] p-6 sm:p-8 text-white">
+        <div className="relative rounded-lg overflow-hidden shadow-xs bg-gradient-to-r from-[#b91c1c] via-[#ee4d2d] to-[#ea580c] p-6 sm:p-8 text-white">
           
           {/* Subtle background decorative shapes */}
           <div className="absolute -right-16 -top-16 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
@@ -68,7 +68,7 @@ export default function PromoBanner() {
             </div>
 
             {/* Right Countdown & CTA */}
-            <div className="flex flex-col items-center gap-4 bg-black/25 backdrop-blur-md p-5 rounded-xl border border-white/20 shrink-0 w-full sm:w-auto">
+            <div className="flex flex-col items-center gap-4 bg-black/25 backdrop-blur-md p-5 rounded-md border border-white/20 shrink-0 w-full sm:w-auto">
               <div className="flex items-center gap-1.5 text-xs font-semibold text-yellow-300">
                 <Clock className="w-3.5 h-3.5" />
                 <span>KẾT THÚC TRONG</span>
@@ -77,21 +77,21 @@ export default function PromoBanner() {
               {/* Countdown Digits */}
               <div className="flex items-center gap-2">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-lg bg-white text-slate-900 font-black text-xl flex items-center justify-center shadow-inner">
+                  <div className="w-12 h-12 rounded-md bg-white text-slate-900 font-black text-xl flex items-center justify-center shadow-inner">
                     {formatNumber(timeLeft.hours)}
                   </div>
                   <span className="text-[9px] uppercase tracking-wider text-orange-200 mt-1">Giờ</span>
                 </div>
                 <span className="text-xl font-bold text-white mb-4">:</span>
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-lg bg-white text-slate-900 font-black text-xl flex items-center justify-center shadow-inner">
+                  <div className="w-12 h-12 rounded-md bg-white text-slate-900 font-black text-xl flex items-center justify-center shadow-inner">
                     {formatNumber(timeLeft.minutes)}
                   </div>
                   <span className="text-[9px] uppercase tracking-wider text-orange-200 mt-1">Phút</span>
                 </div>
                 <span className="text-xl font-bold text-white mb-4">:</span>
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-lg bg-white text-[#ee4d2d] font-black text-xl flex items-center justify-center shadow-inner">
+                  <div className="w-12 h-12 rounded-md bg-white text-[#ee4d2d] font-black text-xl flex items-center justify-center shadow-inner">
                     {formatNumber(timeLeft.seconds)}
                   </div>
                   <span className="text-[9px] uppercase tracking-wider text-orange-200 mt-1">Giây</span>
@@ -99,7 +99,7 @@ export default function PromoBanner() {
               </div>
 
               {/* Action Button */}
-              <button className="w-full py-2.5 px-6 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider rounded-lg shadow-lg hover:shadow-xl transition-all cursor-pointer flex items-center justify-center gap-2 group">
+              <button className="w-full py-2.5 px-6 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider rounded-md shadow-xs hover:shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2 group">
                 <Sparkles className="w-4 h-4 text-slate-900" />
                 <span>SĂN DEAL NGAY</span>
                 <ArrowRight className="w-4 h-4 text-slate-900 group-hover:translate-x-1 transition-transform" />

@@ -1,39 +1,78 @@
-import axiosClient from './axiosClient'
-import type { OrderResponse, CreateOrderRequest, AddressResponse } from '../types/order'
-import type { ApiResponse, PageResponse } from '../types/api'
+import axiosClient from "./axiosClient"
+import type { HistoryOrder, DetailOrderResponse } from "../types/order"
+import type { PageResponse } from "../types/api"
+
+export interface BackendAddress {
+  id: number
+  fullName: string
+  phone: string
+  street: string
+  ward: string
+  district: string
+  city: string
+  isDefault: boolean
+}
+
+export interface CreateAddressPayload {
+  fullName: string
+  phone: string
+  street: string
+  ward: string
+  district: string
+  city: string
+  isDefault?: boolean
+}
+
+export interface CheckoutCartPayload {
+  addressId: number
+  voucherId?: number | null
+  paymentMethod: "COD" | "BANK_TRANSFER" | "VNPAY" | "MOMO" | "CREDIT_CARD"
+  note?: string
+  cartItemIds: number[]
+}
 
 export const orderApi = {
-  createOrder: async (data: CreateOrderRequest): Promise<OrderResponse> => {
-    const res = await axiosClient.post<any, ApiResponse<OrderResponse>>('/orders', data)
-    return res.data
+  createOrder: async (data: CheckoutCartPayload): Promise<any> => {
+    const res = await axiosClient.post<any, any>("/orders", data)
+    return res
   },
 
-  getBuyerOrders: async (params?: { page?: number; size?: number; status?: string }): Promise<PageResponse<OrderResponse>> => {
-    const res = await axiosClient.get<any, ApiResponse<PageResponse<OrderResponse>>>('/orders/history', { params })
-    return res.data
+  getBuyerOrders: async (params?: { page?: number; size?: number; status?: string }): Promise<PageResponse<HistoryOrder>> => {
+    const res = await axiosClient.get<any, PageResponse<HistoryOrder>>("/orders", { params })
+    return res as unknown as PageResponse<HistoryOrder>
   },
 
-  getOrderDetail: async (orderId: number | string): Promise<OrderResponse> => {
-    const res = await axiosClient.get<any, ApiResponse<OrderResponse>>(`/orders/${orderId}`)
-    return res.data
+  getOrderDetail: async (orderId: number | string): Promise<DetailOrderResponse> => {
+    const res = await axiosClient.get<any, DetailOrderResponse>(`/orders/${orderId}`)
+    return res as unknown as DetailOrderResponse
   },
 
-  cancelOrder: async (orderId: number | string, reason: string): Promise<OrderResponse> => {
-    const res = await axiosClient.post<any, ApiResponse<OrderResponse>>(`/orders/${orderId}/cancel`, reason, {
-      headers: {
-        'Content-Type': 'text/plain',
-      },
-    })
-    return res.data
+  cancelOrder: async (orderId: number | string, reason?: string): Promise<any> => {
+    const res = await axiosClient.put<any, any>(`/orders/${orderId}/cancel`, reason || "Buyer requested cancellation")
+    return res
   },
 
-  getAddresses: async (): Promise<AddressResponse[]> => {
-    const res = await axiosClient.get<any, ApiResponse<AddressResponse[]>>('/users/addresses')
-    return res.data
+  getAddresses: async (): Promise<BackendAddress[]> => {
+    const res = await axiosClient.get<any, BackendAddress[]>("/users/me/addresses")
+    return res || []
   },
 
-  addAddress: async (data: Omit<AddressResponse, 'id'>): Promise<AddressResponse> => {
-    const res = await axiosClient.post<any, ApiResponse<AddressResponse>>('/users/addresses', data)
-    return res.data
+  addAddress: async (data: CreateAddressPayload): Promise<BackendAddress> => {
+    const res = await axiosClient.post<any, BackendAddress>("/users/me/addresses", data)
+    return res
+  },
+
+  updateAddress: async (addressId: number, data: CreateAddressPayload): Promise<BackendAddress> => {
+    const res = await axiosClient.put<any, BackendAddress>(`/users/me/addresses/${addressId}`, data)
+    return res
+  },
+
+  deleteAddress: async (addressId: number): Promise<void> => {
+    await axiosClient.delete(`/users/me/addresses/${addressId}`)
+  },
+
+  setDefaultAddress: async (addressId: number): Promise<BackendAddress> => {
+    const res = await axiosClient.put<any, BackendAddress>(`/users/me/addresses/${addressId}/default`)
+    return res
   },
 }
