@@ -117,7 +117,6 @@ export default function SellerLayout({ children, title, subtitle }: SellerLayout
     }
   }, [currentUser, isSeller])
 
-
   const handleQuickSellerLogin = async () => {
     setIsLoadingLogin(true)
     setAuthError(null)

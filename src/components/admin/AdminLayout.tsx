@@ -32,7 +32,6 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
   const [isLoadingLogin, setIsLoadingLogin] = useState(false)
   const [authError, setAuthError] = useState<string | null>(null)
 
-  // Kiểm tra quyền ADMIN từ localStorage & fetch profile
   useEffect(() => {
     const checkAdminAuth = async () => {
       try {
@@ -69,7 +68,6 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
     checkAdminAuth()
   }, [location.pathname])
 
-  // Đăng nhập nhanh Admin Demo với tài khoản buyer@zorashop.com (có ROLE_ADMIN)
   const handleQuickAdminLogin = async () => {
     setIsLoadingLogin(true)
     setAuthError(null)
@@ -129,7 +127,7 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
 
   return (
     <div className="min-h-screen bg-[#f6f6f6] flex flex-col font-sans text-slate-800 antialiased">
-      {/* Top Navbar - Giống hệt phong cách Seller Header */}
+      
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo & Portal Branding */}
@@ -175,7 +173,6 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
               <ExternalLink className="w-3.5 h-3.5" />
               <span>Xem Sàn (Tab mới)</span>
             </a>
-
 
             <div className="h-4 w-[1px] bg-slate-200 hidden sm:block" />
 
@@ -260,7 +257,7 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
 
       {/* Main Container with Sidebar + Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1 flex flex-col md:flex-row gap-6">
-        {/* Sidebar Navigation - Đồng bộ hoàn toàn với Seller Sidebar */}
+        
         <aside className={`md:w-64 shrink-0 ${isMobileMenuOpen ? 'block' : 'hidden md:block'}`}>
           <div className="bg-white rounded-lg border border-slate-200 p-3 shadow-xs sticky top-22">
             <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-2">
@@ -291,13 +288,12 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
               })}
             </nav>
 
-
           </div>
         </aside>
 
         {/* Content Area */}
         <main className="flex-1 min-w-0">
-          {/* Header Banner for Page - Đồng bộ hoàn toàn với Seller Banner */}
+          
           <div className="bg-white rounded-lg border border-slate-200 p-5 mb-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">{title}</h1>

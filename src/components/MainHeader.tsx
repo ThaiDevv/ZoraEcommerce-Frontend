@@ -15,7 +15,6 @@ import {
 import ZoraLogo from "./ZoraLogo"
 import { cartApi, type BackendCartItem } from "../api/cartApi"
 
-// Mock search suggestions: Gọn gàng vừa khung, không thanh cuộn
 const SEARCH_SUGGESTIONS = [
   "Iphone",
   "Áo Thun Nam",
@@ -63,7 +62,6 @@ export default function MainHeader() {
   const [searchParams] = useSearchParams()
   const [searchQuery, setSearchQuery] = useState(searchParams.get("keyword") || "")
 
-  // Đồng bộ search input khi keyword trên URL thay đổi
   useEffect(() => {
     const kw = searchParams.get("keyword")
     if (kw !== null) {
@@ -74,7 +72,6 @@ export default function MainHeader() {
   const [isAppQrHovered, setIsAppQrHovered] = useState(false)
   const [isNotifHovered, setIsNotifHovered] = useState(false)
   
-  // Real cart state: TUYỆT ĐỐI KHÔNG MOCK khi chưa đăng nhập
   const [cartCount, setCartCount] = useState<number>(0)
   const [cartPreviewItems, setCartPreviewItems] = useState<
     Array<{
@@ -214,7 +211,7 @@ export default function MainHeader() {
       <div className="bg-[#0f172a] text-slate-300 text-[12px] font-normal border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-8 flex items-center justify-between">
           
-          {/* Top Left Links: Nếu là ADMIN thì hiển thị Kênh Quản Trị, ngược lại Kênh Người Bán */}
+          
           <div className="flex items-center gap-4">
             {isUserAdmin() ? (
               <Link 
@@ -237,7 +234,7 @@ export default function MainHeader() {
             
             <span className="text-slate-700 hidden sm:inline">|</span>
             
-            {/* Tải ứng dụng QR popover */}
+            
             <div 
               className="relative hidden sm:block"
               onMouseEnter={() => setIsAppQrHovered(true)}
@@ -268,7 +265,7 @@ export default function MainHeader() {
 
             <span className="text-slate-700 hidden md:inline">|</span>
 
-            {/* Kết nối Social */}
+            
             <div className="hidden md:flex items-center gap-2">
               <span className="text-slate-400">Kết nối:</span>
               <a 
@@ -439,7 +436,7 @@ export default function MainHeader() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 bg-white">
         <div className="flex items-center justify-between gap-6 md:gap-10">
           
-          {/* Logo ZoraEcommerce: Logo mặc định gradient, không đổi màu trắng */}
+          
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
             <div className="w-10 h-10 transition-transform group-hover:scale-105 duration-200">
               <ZoraLogo />
@@ -456,7 +453,7 @@ export default function MainHeader() {
 
           {/* Search Bar Container */}
           <div className="flex-1 max-w-3xl">
-            {/* Search Input Form: Viền cam sắc nét, nền slate-50 focus trắng */}
+            
             <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <div className="relative flex-1 flex items-center bg-slate-50 border-2 border-[#ee4d2d] rounded-lg overflow-hidden shadow-xs focus-within:bg-white focus-within:ring-2 focus-within:ring-[#ee4d2d]/20 transition-all">
                 <input
@@ -489,7 +486,7 @@ export default function MainHeader() {
               </div>
             </form>
 
-            {/* Keyword Suggestions: Gọn gàng không thanh cuộn, màu slate-600 hover cam */}
+            
             <div className="mt-1.5 flex items-center gap-2 overflow-hidden text-[11.5px] text-slate-500">
               {SEARCH_SUGGESTIONS.map((tag) => (
                 <button
@@ -508,7 +505,7 @@ export default function MainHeader() {
             </div>
           </div>
 
-          {/* Cart Icon & Preview Popover: Viền thanh lịch, hover cam */}
+          
           <div 
             className="relative shrink-0"
             onMouseEnter={() => setIsCartHovered(true)}
@@ -520,7 +517,7 @@ export default function MainHeader() {
               title="Xem giỏ hàng của bạn"
             >
               <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              {/* Badge Item Count: Chỉ hiện khi ĐÃ ĐĂNG NHẬP và CÓ HÀNG trong giỏ */}
+              
               {cartCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 bg-[#ee4d2d] text-white text-[11px] font-bold h-5 min-w-[20px] px-1 rounded-full flex items-center justify-center border-2 border-white shadow-xs">
                   {cartCount > 99 ? "99+" : cartCount}
@@ -532,7 +529,7 @@ export default function MainHeader() {
             {isCartHovered && (
               <div className="absolute right-0 top-full mt-2 w-84 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200 text-slate-800 z-50 p-4 animate-in fade-in duration-150">
                 {!isLoggedIn ? (
-                  /* Khi CHƯA ĐĂNG NHẬP: Không mock dữ liệu giỏ hàng, hiển thị form mời đăng nhập */
+                  
                   <div className="py-6 px-3 flex flex-col items-center justify-center text-center">
                     <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center text-[#ee4d2d] mb-3">
                       <ShoppingCart className="w-8 h-8 stroke-[1.5]" />
@@ -549,7 +546,7 @@ export default function MainHeader() {
                     </Link>
                   </div>
                 ) : cartPreviewItems.length === 0 ? (
-                  /* Khi ĐÃ ĐĂNG NHẬP nhưng giỏ hàng trống */
+                  
                   <div className="py-6 px-3 flex flex-col items-center justify-center text-center">
                     <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mb-3">
                       <ShoppingCart className="w-8 h-8 stroke-[1.5]" />
@@ -558,7 +555,7 @@ export default function MainHeader() {
                     <p className="text-xs text-slate-400 mt-1">Giỏ hàng của bạn hiện đang trống</p>
                   </div>
                 ) : (
-                  /* Khi ĐÃ ĐĂNG NHẬP và CÓ SẢN PHẨM THỰC TẾ */
+                  
                   <>
                     <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                       <span className="text-[13px] font-semibold text-slate-800">Sản phẩm mới thêm ({cartCount})</span>

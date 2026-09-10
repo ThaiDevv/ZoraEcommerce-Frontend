@@ -281,7 +281,7 @@ export default function BannerSlider() {
 
         </div>
 
-        {/* ================= 2. QUICK SERVICE BADGES (8 DỊCH VỤ TIỆN ÍCH) ================= */}
+        
         <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 pt-3">
           {QUICK_SERVICES.map((item) => {
             const Icon = item.icon

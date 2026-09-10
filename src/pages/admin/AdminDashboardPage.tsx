@@ -48,14 +48,12 @@ export default function AdminDashboardPage() {
     fetchData()
   }, [])
 
-  // Thống kê người dùng
   const buyerCount = users.filter((u) => u.role === 'BUYER').length
   const sellerCount = users.filter((u) => u.role === 'SELLER').length
   const adminCount = users.filter((u) => u.role === 'ADMIN').length
   const activeCount = users.filter((u) => u.isActive).length
   const inactiveCount = users.filter((u) => !u.isActive).length
 
-  // Thống kê danh mục 3 cấp
   const countAllCategories = (cats: CategoryResponse[]) => {
     let l1 = 0, l2 = 0, l3 = 0
     const traverse = (list: CategoryResponse[]) => {
@@ -99,9 +97,9 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      {/* 4 Thẻ KPI thống kê - Màu sắc và bo góc đồng bộ Seller Dashboard */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {/* Tổng người dùng */}
+        
         <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">Tổng Người Dùng</span>
@@ -118,7 +116,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Người bán */}
+        
         <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">Người Bán (SELLER)</span>
@@ -134,7 +132,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Người mua */}
+        
         <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">Người Mua (BUYER)</span>
@@ -150,7 +148,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        {/* Tổng danh mục */}
+        
         <div className="bg-white rounded-lg border border-slate-200 p-4 shadow-xs">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-semibold text-slate-500">Tổng Danh Mục</span>
@@ -169,9 +167,9 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* 2 Khối Quản lý Nhanh - Thiết kế gọn gàng, nút cam chuẩn Zora */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-        {/* Khối Người Dùng */}
+        
         <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -209,7 +207,7 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
 
-        {/* Khối Danh Mục */}
+        
         <div className="bg-white rounded-lg border border-slate-200 p-5 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -248,7 +246,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Bảng Người Dùng Gần Đây - Gọn gàng không chữ thừa */}
+      
       <div className="bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
         <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">

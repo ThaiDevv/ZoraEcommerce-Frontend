@@ -295,7 +295,6 @@ export default function CheckoutPage() {
         .map(([shopId, note]) => `Shop #${shopId}: ${note.trim()}`)
       const combinedNote = noteParts.length > 0 ? noteParts.join(' | ') : 'Đặt hàng từ ZoraShop Checkout'
 
-      // 1. POST /api/v1/orders (Tạo đơn hàng kèm paymentMethod)
       const checkoutRes = await orderApi.createOrder({
         addressId: selectedAddress.id,
         paymentMethod: selectedPaymentMethod,
@@ -303,7 +302,6 @@ export default function CheckoutPage() {
         note: combinedNote,
       })
 
-      // 2. Trích xuất danh sách đơn hàng đã tạo
       let createdOrders: any[] = []
       if (Array.isArray(checkoutRes)) {
         createdOrders = checkoutRes
@@ -317,7 +315,6 @@ export default function CheckoutPage() {
 
       let firstOrderId: number | string | null = null
 
-      // 3. Tự động gọi riêng endpoint độc lập: POST /api/v1/orders/{orderId}/payment
       if (createdOrders.length > 0) {
         for (const ord of createdOrders) {
           const ordId = ord.orderId || ord.id
@@ -332,7 +329,6 @@ export default function CheckoutPage() {
         }
       }
 
-      // 4. Xóa session checkout và thông báo kết quả
       sessionStorage.removeItem('zora_checkout_data')
       window.dispatchEvent(new Event('cartUpdated'))
 
@@ -344,7 +340,6 @@ export default function CheckoutPage() {
         showToast(`Thanh toán thành công qua ${selectedPaymentMethod}! Đơn hàng đã được xác nhận.`)
       }
 
-      // 5. Điều hướng sang chi tiết đơn hàng
       setTimeout(() => {
         if (firstOrderId) {
           navigate(`/orders/${firstOrderId}`)
@@ -817,7 +812,7 @@ export default function CheckoutPage() {
         )}
       </main>
 
-      {/* MODAL 1: CHỌN / THÊM ĐỊA CHỈ NHẬN HÀNG */}
+      
       {isAddressModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-xs max-w-lg w-full shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col">
@@ -1037,7 +1032,7 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      {/* MODAL 2: CHỌN ZORA VOUCHER */}
+      
       {isVoucherModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-white rounded-xs max-w-md w-full shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">

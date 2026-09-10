@@ -221,7 +221,7 @@ export default function ShopPage() {
         </nav>
 
         {/* ========================================================================= */}
-        {/* 1. SHOPEE STANDARD SHOP HERO HEADER (2 KHỐI KINH ĐIỂN CỦA SHOPEE)        */}
+        
         {/* ========================================================================= */}
         {isLoadingShop ? (
           <div className="bg-white rounded-2xl p-8 shadow-xs border border-slate-200/80 animate-pulse h-48 flex items-center justify-center text-slate-400 text-xs">
@@ -230,7 +230,7 @@ export default function ShopPage() {
         ) : (
           <div className="bg-white rounded-md shadow-xs border border-slate-200/80 overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0">
             
-            {/* KHỐI TRÁI: THẺ DANH TÍNH SHOP (~40% width) */}
+            
             <div className="lg:col-span-5 relative p-6 sm:p-7 flex flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-[#1e1b4b] text-white">
               {/* Background Blur Overlay from Shop Banner */}
               <div 
@@ -312,11 +312,11 @@ export default function ShopPage() {
               </div>
             </div>
 
-            {/* KHỐI PHẢI: LƯỚI 6 CHỈ SỐ KINH ĐIỂN SHOPEE (~60% width) */}
+            
             <div className="lg:col-span-7 p-6 sm:p-7 flex items-center bg-white">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-5 gap-x-6 w-full text-xs text-slate-600">
                 
-                {/* 1. Sản Phẩm */}
+                
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-orange-50 text-[#ee4d2d] flex items-center justify-center shrink-0">
                     <ShoppingBag className="w-4 h-4" />
@@ -327,7 +327,7 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {/* 2. Đang Theo */}
+                
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                     <UserCheck className="w-4 h-4" />
@@ -338,7 +338,7 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {/* 3. Tỉ Lệ Phản Hồi Chat */}
+                
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-orange-50 text-[#ee4d2d] flex items-center justify-center shrink-0">
                     <MessageSquare className="w-4 h-4" />
@@ -352,7 +352,7 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {/* 4. Người Theo Dõi */}
+                
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
                     <Users className="w-4 h-4" />
@@ -363,7 +363,7 @@ export default function ShopPage() {
                   </div>
                 </div>
 
-                {/* 5. Đánh Giá */}
+                
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
                     <Star className="w-4 h-4 fill-amber-500" />
@@ -395,7 +395,7 @@ export default function ShopPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 2. SHOPEE SHOP NAVIGATION TABS (THANH MENU ĐIỀU HƯỚNG CỦA SHOP)           */}
+        
         {/* ========================================================================= */}
         <div className="bg-white rounded-xl shadow-xs border border-slate-200/80 px-4">
           <div className="flex items-center gap-8 overflow-x-auto no-scrollbar text-xs sm:text-sm font-semibold text-slate-600 whitespace-nowrap">
@@ -422,7 +422,7 @@ export default function ShopPage() {
         </div>
 
         {/* ========================================================================= */}
-        {/* 3. SHOPEE VOUCHER CARDS (DẢI VOUCHER RĂNG CƯA CAM SHOPEE RIÊNG CỦA SHOP)  */}
+        
         {/* ========================================================================= */}
         {shop?.vouchers && shop.vouchers.length > 0 && (
           <div className="bg-white rounded-md p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-3">
@@ -467,7 +467,7 @@ export default function ShopPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 4. SHOP HERO BANNER SLIDER / SHOWCASE (TAB: DẠO)                         */}
+        
         {/* ========================================================================= */}
         {activeTab === 'home' && (
           <div className="relative rounded-lg overflow-hidden shadow-xs border border-slate-200/80 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
@@ -507,7 +507,7 @@ export default function ShopPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 5. TOP BÁN CHẠY CỦA SHOP (BEST SELLERS ROW)                              */}
+        
         {/* ========================================================================= */}
         {(activeTab === 'home' || activeTab === 'best') && bestSellerProducts.length > 0 && (
           <div className="bg-white rounded-md p-5 shadow-xs border border-slate-200/80 space-y-4">
@@ -567,12 +567,12 @@ export default function ShopPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 6. SHOPEE FULL CATALOG: SIDEBAR FILTER (TRÁI) & PRODUCTS GRID (PHẢI)      */}
+        
         {/* ========================================================================= */}
         {(activeTab === 'home' || activeTab === 'all' || activeTab === 'best') && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             
-            {/* ================= CỘT TRÁI: SIDEBAR BỘ LỌC SHOPEE (25% width) ================= */}
+            
             <aside className="lg:col-span-3 bg-white rounded-md p-5 shadow-xs border border-slate-200/80 space-y-6">
               
               <div className="flex items-center gap-2 text-slate-900 font-bold text-sm border-b border-slate-100 pb-3">
@@ -580,7 +580,7 @@ export default function ShopPage() {
                 <span>BỘ LỌC CỦA SHOP</span>
               </div>
 
-              {/* Danh Mục Của Shop (Riêng cho shop này!) */}
+              
               <div className="space-y-2.5">
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                   Danh Mục Của Shop
@@ -607,7 +607,7 @@ export default function ShopPage() {
                 </div>
               </div>
 
-              {/* Nơi Gửi Hàng */}
+              
               <div className="space-y-2.5 border-t border-slate-100 pt-4">
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                   Nơi Gửi Hàng
@@ -632,7 +632,7 @@ export default function ShopPage() {
                 </div>
               </div>
 
-              {/* Đơn Vị Vận Chuyển */}
+              
               <div className="space-y-2.5 border-t border-slate-100 pt-4">
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                   Đơn Vị Vận Chuyển
@@ -653,7 +653,7 @@ export default function ShopPage() {
                 </div>
               </div>
 
-              {/* Khoảng Giá (Từ - Đến) */}
+              
               <div className="space-y-2.5 border-t border-slate-100 pt-4">
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                   Khoảng Giá
@@ -685,7 +685,7 @@ export default function ShopPage() {
                 </button>
               </div>
 
-              {/* Đánh Giá Sao */}
+              
               <div className="space-y-2.5 border-t border-slate-100 pt-4">
                 <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
                   Đánh Giá
@@ -728,10 +728,10 @@ export default function ShopPage() {
 
             </aside>
 
-            {/* ================= CỘT PHẢI: LƯỚI SẢN PHẨM & THANH SẮP XẾP (75% width) ================= */}
+            
             <div className="lg:col-span-9 space-y-4">
               
-              {/* Thanh Sắp Xếp Chuẩn Shopee */}
+              
               <div className="bg-white rounded-xl p-3 sm:p-3.5 shadow-xs border border-slate-200/80 flex flex-wrap items-center justify-between gap-3 text-xs">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold text-slate-500 mr-1">Sắp xếp theo:</span>
@@ -757,7 +757,7 @@ export default function ShopPage() {
                     </button>
                   ))}
 
-                  {/* Giá Dropdown */}
+                  
                   <div className="relative">
                     <button
                       onClick={() => setIsPriceDropdownOpen(!isPriceDropdownOpen)}
@@ -828,7 +828,7 @@ export default function ShopPage() {
                 </div>
               </div>
 
-              {/* Lưới Sản Phẩm 4 Cột */}
+              
               {isLoadingProducts ? (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5">
                   {Array.from({ length: 4 }).map((_, i) => (
@@ -948,7 +948,7 @@ export default function ShopPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* 7. TAB HỒ SƠ SHOP (ABOUT & GUARANTEES)                                   */}
+        
         {/* ========================================================================= */}
         {activeTab === 'about' && (
           <div className="bg-white rounded-md p-6 sm:p-8 shadow-xs border border-slate-200/80 space-y-6">

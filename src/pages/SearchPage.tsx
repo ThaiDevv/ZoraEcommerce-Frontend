@@ -35,7 +35,6 @@ export interface SearchProductItem {
   image: string
 }
 
-// Fallback mock items nếu backend chưa có dữ liệu cho từ khóa đó
 const FALLBACK_SEARCH_ITEMS: SearchProductItem[] = [
   {
     id: 1,
@@ -268,9 +267,7 @@ export default function SearchPage() {
         })
         setProducts(mapped)
       } else {
-        // Nếu không có sản phẩm trên backend và có từ khóa tìm kiếm
         if (keyword.trim()) {
-          // Lọc trong fallback nếu khớp từ khóa cho trải nghiệm trực quan
           const matchedFallback = FALLBACK_SEARCH_ITEMS.filter((item) =>
             item.name.toLowerCase().includes(keyword.toLowerCase().trim())
           )
@@ -283,7 +280,6 @@ export default function SearchPage() {
       }
     } catch (err) {
       console.warn("Lỗi tìm kiếm sản phẩm:", err)
-      // Khi API lỗi hoặc chưa có data, dùng fallback
       const filtered = keyword.trim()
         ? FALLBACK_SEARCH_ITEMS.filter((i) => i.name.toLowerCase().includes(keyword.toLowerCase().trim()))
         : FALLBACK_SEARCH_ITEMS
@@ -415,10 +411,10 @@ export default function SearchPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           
-          {/* ================= LEFT COLUMN: BỘ LỌC TÌM KIẾM ================= */}
+          
           <aside className="w-full lg:w-60 xl:w-64 shrink-0 bg-white rounded-md p-4 border border-slate-200/90 shadow-2xs space-y-6">
             
-            {/* Header Bộ Lọc */}
+            
             <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2 text-slate-900 font-bold text-sm tracking-wide uppercase">
                 <Filter className="w-4 h-4 text-[#ee4d2d]" />
@@ -426,7 +422,7 @@ export default function SearchPage() {
               </div>
             </div>
 
-            {/* Mục 1: Theo Danh Mục */}
+            
             <div className="space-y-2.5 pb-4 border-b border-slate-100">
               <h3 className="text-xs font-bold uppercase text-slate-800 tracking-wider">
                 Theo Danh Mục
@@ -467,7 +463,7 @@ export default function SearchPage() {
               </div>
             </div>
 
-            {/* Mục 2: Nơi Bán */}
+            
             <div className="space-y-2.5 pb-4 border-b border-slate-100">
               <h3 className="text-xs font-bold uppercase text-slate-800 tracking-wider">
                 Nơi Bán
@@ -499,7 +495,7 @@ export default function SearchPage() {
               </div>
             </div>
 
-            {/* Mục 3: Khoảng Giá (₫) */}
+            
             <div className="space-y-2.5 pb-4 border-b border-slate-100">
               <h3 className="text-xs font-bold uppercase text-slate-800 tracking-wider">
                 Khoảng Giá (₫)
@@ -531,7 +527,7 @@ export default function SearchPage() {
               </form>
             </div>
 
-            {/* Mục 4: Đánh Giá */}
+            
             <div className="space-y-2.5 pb-4 border-b border-slate-100">
               <h3 className="text-xs font-bold uppercase text-slate-800 tracking-wider">
                 Đánh Giá
@@ -566,7 +562,7 @@ export default function SearchPage() {
               </div>
             </div>
 
-            {/* Mục 5: Dịch Vụ & Khuyến Mãi */}
+            
             <div className="space-y-2.5 pb-4 border-b border-slate-100">
               <h3 className="text-xs font-bold uppercase text-slate-800 tracking-wider">
                 Dịch Vụ & Khuyến Mãi
@@ -602,7 +598,7 @@ export default function SearchPage() {
               </div>
             </div>
 
-            {/* Xóa Tất Cả Bộ Lọc */}
+            
             <button
               onClick={handleResetFilters}
               className="w-full py-2 bg-slate-100 hover:bg-orange-50 text-slate-700 hover:text-[#ee4d2d] border border-slate-200 hover:border-orange-300 font-semibold rounded text-xs uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1.5"
@@ -612,15 +608,15 @@ export default function SearchPage() {
             </button>
           </aside>
 
-          {/* ================= RIGHT COLUMN: KẾT QUẢ TÌM KIẾM ================= */}
+          
           <section className="flex-1 min-w-0 space-y-4">
             
-            {/* 1. Shopee Sort Bar (Thanh Sắp Xếp) */}
+            
             <div className="bg-[#ededed] rounded-sm p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-slate-600 font-medium">Sắp xếp theo:</span>
 
-                {/* Nút Liên quan */}
+                
                 <button
                   onClick={() => handleSelectSort("popular")}
                   className={`px-4 py-2 rounded-xs font-medium transition-all cursor-pointer ${
@@ -632,7 +628,7 @@ export default function SearchPage() {
                   Liên Quan
                 </button>
 
-                {/* Nút Mới nhất */}
+                
                 <button
                   onClick={() => handleSelectSort("latest")}
                   className={`px-4 py-2 rounded-xs font-medium transition-all cursor-pointer ${
@@ -644,7 +640,7 @@ export default function SearchPage() {
                   Mới Nhất
                 </button>
 
-                {/* Nút Bán chạy */}
+                
                 <button
                   onClick={() => handleSelectSort("sales")}
                   className={`px-4 py-2 rounded-xs font-medium transition-all cursor-pointer ${
@@ -656,7 +652,7 @@ export default function SearchPage() {
                   Bán Chạy
                 </button>
 
-                {/* Dropdown Giá */}
+                
                 <div className="relative">
                   <button
                     onClick={() => setIsPriceDropdownOpen(!isPriceDropdownOpen)}
@@ -787,7 +783,7 @@ export default function SearchPage() {
                 ))}
               </div>
             ) : displayedProducts.length === 0 ? (
-              /* Empty State: Khi không có kết quả */
+              
               <div className="bg-white rounded-md p-10 text-center border border-slate-200 shadow-2xs space-y-4 my-4">
                 <div className="w-20 h-20 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
                   <Search className="w-10 h-10 stroke-[1.5]" />
@@ -799,7 +795,7 @@ export default function SearchPage() {
                   Hãy thử sử dụng từ khóa ngắn hơn, kiểm tra lỗi chính tả hoặc thử các từ khóa phổ biến bên dưới.
                 </p>
 
-                {/* Từ khóa gợi ý */}
+                
                 <div className="pt-2 flex items-center justify-center gap-2 flex-wrap">
                   {POPULAR_SEARCH_TAGS.map((tag) => (
                     <button
@@ -917,7 +913,6 @@ export default function SearchPage() {
                 </button>
 
                 {Array.from({ length: totalPages }).map((_, idx) => {
-                  // Chỉ hiển thị tối đa 7 nút phân trang
                   if (totalPages > 7 && Math.abs(idx - currentPage) > 2 && idx !== 0 && idx !== totalPages - 1) {
                     if (idx === 1 || idx === totalPages - 2) {
                       return <span key={idx} className="px-1 text-slate-400 text-xs">...</span>

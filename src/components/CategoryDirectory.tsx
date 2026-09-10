@@ -29,7 +29,6 @@ export default function CategoryDirectory() {
         if (Array.isArray(tree) && tree.length > 0) {
           const extracted: CategoryGroup[] = []
 
-          // Lấy danh mục cấp 2 (tiêu đề nhóm) và cấp 3 (các mục con bên trong) từ API
           tree.forEach((level1) => {
             if (level1.children && level1.children.length > 0) {
               level1.children.forEach((level2) => {
@@ -43,7 +42,6 @@ export default function CategoryDirectory() {
                 })
               })
             } else {
-              // Nếu danh mục cấp 1 chưa có cấp 2 con, vẫn hiển thị để không bỏ sót
               extracted.push({
                 id: level1.id,
                 name: level1.name,
@@ -86,7 +84,7 @@ export default function CategoryDirectory() {
           )}
         </div>
 
-        {/* Dynamic Categories Grid: Lấy danh mục cấp 2 & cấp 3 trực tiếp từ backend API */}
+        
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             {Array.from({ length: 10 }).map((_, idx) => (
@@ -105,7 +103,7 @@ export default function CategoryDirectory() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-8 items-start">
             {groups.map((group) => (
               <div key={group.id} className="space-y-1.5">
-                {/* Tiêu đề nhóm: Danh mục cấp 2 */}
+                
                 <Link
                   to={`/search?categoryId=${group.id}`}
                   className="block text-[12px] font-bold text-slate-800 uppercase tracking-tight hover:text-[#ee4d2d] transition-colors"
@@ -114,7 +112,7 @@ export default function CategoryDirectory() {
                   {group.name}
                 </Link>
 
-                {/* Các danh mục con: Danh mục cấp 3 phân cách bởi | */}
+                
                 <div className="text-[11.5px] text-slate-500 leading-relaxed font-normal">
                   {group.items.length > 0 ? (
                     group.items.map((child, idx) => (

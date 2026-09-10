@@ -717,7 +717,7 @@ export default function RegisterPage() {
         </div>
       </main>
 
-      {/* ================= CHÂN BAR (FOOTER BAR) ================= */}
+      
       <AuthFooter />
     </div>
   )

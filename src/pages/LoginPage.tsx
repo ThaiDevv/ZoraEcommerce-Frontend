@@ -41,7 +41,6 @@ export default function LoginPage() {
   }
 
   // Interactive 3D Perspective Tilt & Specular Light for artwork
-  // Nếu đã đăng nhập với vai trò ADMIN thì chuyển thẳng vào Admin Dashboard
   useEffect(() => {
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token')
@@ -146,15 +145,11 @@ export default function LoginPage() {
       window.dispatchEvent(new Event('authChanged'))
       window.dispatchEvent(new Event('cartUpdated'))
 
-      // Lấy đường dẫn chuyển tiếp nếu có (VD: quay lại /checkout hoặc /cart)
       const redirectUrl =
         new URLSearchParams(location.search).get('redirect') ||
         (location.state as any)?.from ||
         '/'
 
-      // Phân quyền điều hướng:
-      // - ADMIN: chuyển hướng vào Kênh Quản Trị (/admin/dashboard)
-      // - SELLER & BUYER: chuyển về Trang Chủ '/' (hoặc trang trước đó nếu có redirect)
       if (userRole.includes('ADMIN') || userRole === 'ROLE_ADMIN' || userRole === 'ADMIN') {
         navigate('/admin/dashboard', { replace: true })
       } else {
@@ -565,7 +560,7 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* ================= CHÂN BAR (FOOTER BAR) ================= */}
+      
       <AuthFooter />
     </div>
   )

@@ -70,7 +70,6 @@ const AVAILABLE_VOUCHERS: CartVoucher[] = [
 export default function CartPage() {
   const navigate = useNavigate()
 
-  // Tách rời giao diện: Admin không dùng giỏ hàng mua sắm, chuyển về Dashboard
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("user")
@@ -83,7 +82,6 @@ export default function CartPage() {
       }
     } catch {}
   }, [navigate])
-
 
   // Cart state
   const [shopGroups, setShopGroups] = useState<BackendCartShopGroup[]>([])
@@ -101,7 +99,6 @@ export default function CartPage() {
   // Zora Coins state
   const [useCoins, setUseCoins] = useState(false)
   const userCoins = 10000 // 10,000 Xu = 10,000 VND
-
 
   // Toast
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null)
@@ -402,7 +399,6 @@ export default function CartPage() {
     }
   }
 
-  // Handle Checkout Click - Chuyển hướng sang Trang Thanh Toán riêng biệt (/checkout) chuẩn Shopee
   const handleProceedToCheckout = () => {
     if (selectedItems.length === 0) {
       showToast('Bạn vẫn chưa chọn sản phẩm nào để mua.', 'error')

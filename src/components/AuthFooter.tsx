@@ -5,7 +5,7 @@ export default function AuthFooter() {
     <footer className="relative z-20 w-full bg-[#fbfbfa] text-slate-600 border-t border-slate-200/80 select-none text-xs mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         
-        {/* ================= PHẦN 1: CAM KẾT DỊCH VỤ (SERVICE GUARANTEES) ================= */}
+        
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pb-8 border-b border-slate-200/80">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-orange-50 border border-orange-100 flex items-center justify-center text-[#ee4d2d] shrink-0">
@@ -48,10 +48,10 @@ export default function AuthFooter() {
           </div>
         </div>
 
-        {/* ================= PHẦN 2: 4 CỘT CHÂN TRANG CHUẨN SHOPEE ================= */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-slate-200/80">
           
-          {/* Cột 1: CUSTOMER SERVICE / CHĂM SÓC KHÁCH HÀNG */}
+          
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-['Plus_Jakarta_Sans']">
               CHĂM SÓC KHÁCH HÀNG
@@ -115,7 +115,7 @@ export default function AuthFooter() {
             </ul>
           </div>
 
-          {/* Cột 2: ABOUT ZORA / VỀ ZORA */}
+          
           <div className="space-y-3">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-['Plus_Jakarta_Sans']">
               VỀ ZORA ECOMMERCE
@@ -169,9 +169,9 @@ export default function AuthFooter() {
             </ul>
           </div>
 
-          {/* Cột 3: PAYMENT & LOGISTICS / THANH TOÁN & VẬN CHUYỂN */}
+          
           <div className="space-y-6">
-            {/* Thanh toán (Payment) */}
+            
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-['Plus_Jakarta_Sans']">
                 THANH TOÁN (PAYMENT)
@@ -211,7 +211,7 @@ export default function AuthFooter() {
                   <span className="text-[8px] font-extrabold text-slate-800">COD</span>
                 </div>
 
-                {/* 6. Trả góp 0% */}
+                
                 <div className="h-8 bg-white rounded border border-slate-200/90 shadow-2xs flex items-center justify-center gap-1 p-1 hover:border-[#ee4d2d]/50 transition-colors">
                   <div className="leading-tight text-right">
                     <span className="text-[5px] font-bold text-slate-500 block">TRẢ GÓP</span>
@@ -242,7 +242,7 @@ export default function AuthFooter() {
               </div>
             </div>
 
-            {/* Vận chuyển (Logistics) */}
+            
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-['Plus_Jakarta_Sans']">
                 ĐƠN VỊ VẬN CHUYỂN (LOGISTICS)
@@ -253,7 +253,7 @@ export default function AuthFooter() {
                   <span className="text-white font-black italic text-[9px] tracking-tight">SPX</span>
                 </div>
 
-                {/* 2. Giao Hàng Nhanh (GHN) */}
+                
                 <div className="h-8 bg-white rounded border border-slate-200/90 shadow-2xs flex flex-col items-center justify-center p-0.5 hover:border-[#ee4d2d]/50 transition-colors">
                   <span className="text-[7px] font-black text-[#F26522] tracking-tight leading-none">GHN</span>
                   <span className="text-[4.5px] text-slate-400 font-medium">Giao Hàng Nhanh</span>
@@ -303,7 +303,7 @@ export default function AuthFooter() {
 
           </div>
 
-          {/* Cột 4: FOLLOW US / THEO DÕI CHÚNG TÔI */}
+          
           <div className="space-y-4">
             <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider font-['Plus_Jakarta_Sans']">
               THEO DÕI CHÚNG TÔI (FOLLOW US)
@@ -383,7 +383,7 @@ export default function AuthFooter() {
 
         </div>
 
-        {/* ================= PHẦN 3: BẢN QUYỀN & QUỐC GIA (SHOPEE STYLE) ================= */}
+        
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-2 text-[12px] text-slate-400">
           <div>
             © 2026 ZoraEcommerce. Tất cả các quyền được bảo lưu.
@@ -410,7 +410,7 @@ export default function AuthFooter() {
           </div>
         </div>
 
-        {/* ================= PHẦN 4: ĐIỀU KHOẢN & PHÁP LÝ DOANH NGHIỆP ================= */}
+        
         <div className="space-y-4 pt-4 border-t border-slate-200/60 text-center text-[11px] text-slate-400">
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wider text-slate-500 font-medium">
             <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-[#ee4d2d] transition-colors">

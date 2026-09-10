@@ -481,7 +481,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
 
             {/* Sidebar Navigation Tree */}
             <nav className="space-y-1 text-[13px] select-none">
-              {/* Menu Item: Tài Khoản Của Tôi */}
+              
               <div>
                 <button
                   onClick={() => setActiveTab('profile')}
@@ -530,7 +530,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                 </div>
               </div>
 
-              {/* Menu Item: Đơn Mua */}
+              
               <button
                 onClick={() => setActiveTab('orders')}
                 className={`w-full flex items-center gap-2.5 px-2 py-2 rounded-xs transition-colors cursor-pointer font-medium ${
@@ -543,7 +543,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                 <span>Đơn Mua</span>
               </button>
 
-              {/* Menu Item: Thông Báo */}
+              
               <button
                 onClick={() => alert('Chức năng Thông Báo đang được cập nhật')}
                 className="w-full flex items-center gap-2.5 px-2 py-2 text-slate-700 hover:text-[#ee4d2d] transition-colors cursor-pointer font-medium"
@@ -560,7 +560,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                 <Ticket className="w-4 h-4 text-red-500" />
                 <span>Kho Voucher</span>
               </button>
-              {/* Menu Item: Kênh Quản Trị dành cho ADMIN */}
+              
               {(user.role?.includes('ADMIN') || user.role === 'ROLE_ADMIN' || user.role === 'ADMIN') && (
                 <Link
                   to="/admin/dashboard"
@@ -577,7 +577,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
           {/* ================= RIGHT MAIN CONTENT PANEL ================= */}
           <section className="md:col-span-9 lg:col-span-9 xl:col-span-10 bg-white rounded-xs shadow-xs p-6 border border-slate-100 min-h-[560px]">
             
-            {/* ----------------- TAB 1: HỒ SƠ CỦA TÔI ----------------- */}
+            
             {activeTab === 'profile' && (
               <div>
                 <div className="border-b border-slate-100 pb-4">
@@ -829,7 +829,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
               </div>
             )}
 
-            {/* ----------------- TAB 2: ĐƠN MUA (PURCHASE ORDERS) ----------------- */}
+            
             {activeTab === 'orders' && (
               <div className="space-y-4">
                 {/* Order Sub-Tabs */}
@@ -1027,7 +1027,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
               </div>
             )}
 
-            {/* ----------------- TAB 3: ĐỊA CHỈ (ADDRESSES) ----------------- */}
+            
             {activeTab === 'address' && (
               <div>
                 <div className="border-b border-slate-100 pb-4 flex items-center justify-between">
@@ -1094,7 +1094,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                   )}
                 </div>
 
-                {/* Modal Thêm Địa Chỉ Mới */}
+                
                 {isAddAddressModalOpen && (
                   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
                     <div className="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md overflow-hidden animate-fade-in">
@@ -1218,7 +1218,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
               </div>
             )}
 
-            {/* ----------------- TAB 4: ĐỔI MẬT KHẨU ----------------- */}
+            
             {activeTab === 'password' && (
               <div>
                 <div className="border-b border-slate-100 pb-4">

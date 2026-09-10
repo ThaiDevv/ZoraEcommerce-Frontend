@@ -57,7 +57,6 @@ export default function OrderDetailPage() {
       const data = await orderApi.getOrderDetail(orderId)
       setOrder(data)
 
-      // Lấy thông tin & trạng thái giao dịch thanh toán của đơn hàng (GET /api/v1/orders/{orderId}/payment)
       try {
         const payData = await paymentApi.getPaymentStatus(orderId)
         setPaymentInfo(payData)
@@ -106,7 +105,6 @@ export default function OrderDetailPage() {
     try {
       const payRes = await paymentApi.processPayment(order.orderId)
       setPaymentInfo(payRes)
-      // Cập nhật lại chi tiết đơn hàng (VD: PENDING -> CONFIRMED)
       const updated = await orderApi.getOrderDetail(order.orderId)
       setOrder(updated)
       alert(`Thanh toán thành công qua cổng ${payRes.provider}! Trạng thái giao dịch: ${payRes.status}`)
@@ -382,7 +380,7 @@ export default function OrderDetailPage() {
             {/* 2. SHIPPING & RECEIVING INFO CARD */}
             <div className="bg-white rounded-xs p-6 shadow-2xs border border-slate-100">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                {/* Left: Địa chỉ nhận hàng */}
+                
                 <div className="md:col-span-5 border-b md:border-b-0 md:border-r border-slate-100 pb-6 md:pb-0 md:pr-6">
                   <div className="flex items-center gap-2 mb-3">
                     <MapPin className="w-4 h-4 text-[#ee4d2d]" />
@@ -401,7 +399,7 @@ export default function OrderDetailPage() {
                   </div>
                 </div>
 
-                {/* Right: Thông tin vận chuyển */}
+                
                 <div className="md:col-span-7 md:pl-2">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
@@ -428,7 +426,7 @@ export default function OrderDetailPage() {
                     </div>
                   </div>
 
-                  {/* Vận chuyển timeline log với trục thẳng hàng tuyệt đối */}
+                  
                   <div className="space-y-0 pt-1">
                     {[
                       ...(order.statusType === 'DELIVERED' ? [{
@@ -459,7 +457,7 @@ export default function OrderDetailPage() {
                       const isLast = idx === arr.length - 1
                       return (
                         <div key={idx} className="flex items-start gap-3">
-                          {/* Indicator (Dot và Line nằm chung 1 trục dọc) */}
+                          
                           <div className="flex flex-col items-center shrink-0 w-4">
                             <div className={`w-2.5 h-2.5 rounded-full mt-1 ${evt.color}`} />
                             {!isLast && <div className="w-0.5 flex-1 min-h-[26px] bg-slate-200 my-0.5" />}

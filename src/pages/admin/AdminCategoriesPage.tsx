@@ -18,7 +18,6 @@ import ZoraLogo from '../../components/ZoraLogo'
 import adminApi, { type CreateCategoryPayload } from '../../api/adminApi'
 import type { CategoryResponse } from '../../types/product'
 
-// Helper tạo slug từ tiếng Việt
 function generateSlug(str: string): string {
   if (!str) return ''
   return str
@@ -32,7 +31,6 @@ function generateSlug(str: string): string {
     .replace(/-+/g, '-')
 }
 
-// Helper lấy logo của danh mục (Ưu tiên iconUrl của backend, nếu chưa có thì fallback theo ngành hàng)
 function getCategoryLogo(cat: CategoryResponse): string {
   if (cat.iconUrl && cat.iconUrl.trim()) {
     return cat.iconUrl.trim()
@@ -67,7 +65,6 @@ function getCategoryLogo(cat: CategoryResponse): string {
     return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100'
   }
 
-  // Fallback logo chuẩn vector theo seed tên danh mục
   return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(cat.slug || cat.name)}`
 }
 
@@ -78,10 +75,8 @@ export default function AdminCategoriesPage() {
   const [successToast, setSuccessToast] = useState<string | null>(null)
   const [searchKeyword, setSearchKeyword] = useState('')
 
-  // Chế độ xem: mặc định là 'TREE' (Sơ đồ cây theo Hình 9) hoặc 'COLUMNS' (3 cột chi tiết)
   const [viewMode, setViewMode] = useState<'TREE' | 'COLUMNS'>('TREE')
 
-  // Trạng thái mở rộng các node trong cây danh mục
   const [expandedNodeIds, setExpandedNodeIds] = useState<Set<number>>(new Set())
 
   // 3-Column Drilldown Selection
@@ -114,7 +109,6 @@ export default function AdminCategoriesPage() {
   const [deleteTarget, setDeleteTarget] = useState<CategoryResponse | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Hàm lấy tất cả ID của cây để mở rộng toàn bộ
   const collectAllIds = (list: CategoryResponse[]): Set<number> => {
     const ids = new Set<number>()
     const traverse = (items: CategoryResponse[]) => {
@@ -141,7 +135,6 @@ export default function AdminCategoriesPage() {
             const exists = data.some((c) => c.id === prev)
             return exists ? prev : data[0].id
           })
-          // Mặc định thu gọn tất cả theo yêu cầu
           setExpandedNodeIds(new Set())
         }
       }
@@ -177,12 +170,10 @@ export default function AdminCategoriesPage() {
     setExpandedNodeIds(new Set())
   }
 
-  // Danh mục Cấp 1 đang chọn
   const selectedL1 = useMemo(() => {
     return categories.find((c) => c.id === selectedL1Id) || null
   }, [categories, selectedL1Id])
 
-  // Danh sách Cấp 2 của Cấp 1 đang chọn
   const l2List = useMemo(() => {
     return selectedL1?.children || []
   }, [selectedL1])
@@ -198,17 +189,14 @@ export default function AdminCategoriesPage() {
     }
   }, [l2List])
 
-  // Danh mục Cấp 2 đang chọn
   const selectedL2 = useMemo(() => {
     return l2List.find((c) => c.id === selectedL2Id) || null
   }, [l2List, selectedL2Id])
 
-  // Danh sách Cấp 3 của Cấp 2 đang chọn
   const l3List = useMemo(() => {
     return selectedL2?.children || []
   }, [selectedL2])
 
-  // Danh sách gợi ý cha cho modal
   const availableParents = useMemo(() => {
     const list: { id: number; name: string; level: number }[] = []
     const traverse = (cats: CategoryResponse[]) => {
@@ -342,7 +330,6 @@ export default function AdminCategoriesPage() {
     }
   }
 
-  // Kết quả tìm kiếm
   const searchResults = useMemo(() => {
     if (!searchKeyword.trim()) return []
     const q = searchKeyword.toLowerCase().trim()
@@ -363,7 +350,6 @@ export default function AdminCategoriesPage() {
     return results
   }, [categories, searchKeyword])
 
-  // Hàm đệ quy render từng nhánh của Sơ đồ cây theo đúng Hình 9
   const renderTreeBranch = (
     cat: CategoryResponse,
     parentId: number | null
@@ -374,14 +360,14 @@ export default function AdminCategoriesPage() {
 
     return (
       <li key={cat.id} className="category-tree-li">
-        {/* Khối hộp tên danh mục (Chuẩn như hình 9: LOGO của danh mục + TÊN DANH MỤC) */}
+        
         <div 
           onClick={() => {
             if (hasChildren) handleToggleExpand(cat.id)
           }}
           className={`node-box group ${hasChildren ? 'cursor-pointer' : ''} ${isMatchedSearch ? 'node-box-matched' : ''}`}
         >
-          {/* Nút đóng mở nhỏ gọn nếu có danh mục con */}
+          
           {hasChildren && (
             <button
               type="button"
@@ -397,7 +383,7 @@ export default function AdminCategoriesPage() {
             </button>
           )}
 
-          {/* LOGO CỦA DANH MỤC (Thay thế hoàn toàn cho folder) */}
+          
           <div className="w-5 h-5 rounded overflow-hidden flex items-center justify-center shrink-0 bg-slate-50 border border-slate-200">
             <img
               src={getCategoryLogo(cat)}
@@ -409,12 +395,12 @@ export default function AdminCategoriesPage() {
             />
           </div>
 
-          {/* CHỈ GHI TÊN DANH MỤC THEO ĐÚNG YÊU CẦU */}
+          
           <span className="node-text">
             {cat.name}
           </span>
 
-          {/* Các nút thao tác tinh gọn xuất hiện khi rê chuột */}
+          
           <div className="node-actions" onClick={(e) => e.stopPropagation()}>
             {cat.level < 3 && (
               <button
@@ -445,7 +431,7 @@ export default function AdminCategoriesPage() {
           </div>
         </div>
 
-        {/* Các nhánh con (nếu có và đang mở) */}
+        
         {hasChildren && isExpanded && (
           <ul className="category-tree-ul">
             {cat.children!.map((child) =>
@@ -462,7 +448,7 @@ export default function AdminCategoriesPage() {
       title="Cây Danh Mục Hàng Hóa"
       subtitle="Sơ đồ cây phân cấp danh mục trực quan với logo thương hiệu từng ngành hàng."
     >
-      {/* Scoped CSS cho sơ đồ đường kẻ nhánh cây chuẩn như Hình 9 */}
+      
       <style>{`
         .category-tree-wrapper {
           overflow-x: auto;
@@ -484,7 +470,7 @@ export default function AdminCategoriesPage() {
           position: relative;
           padding: 6px 0 6px 26px;
         }
-        /* Đường kẻ dọc kết nối */
+        
         .category-tree-li::before {
           content: '';
           position: absolute;
@@ -494,7 +480,7 @@ export default function AdminCategoriesPage() {
           width: 1.5px;
           background-color: #94a3b8;
         }
-        /* Đường kẻ ngang nhánh con */
+        
         .category-tree-li::after {
           content: '';
           position: absolute;
@@ -504,12 +490,12 @@ export default function AdminCategoriesPage() {
           height: 1.5px;
           background-color: #94a3b8;
         }
-        /* Nhánh cuối cùng dừng đường kẻ dọc đúng điểm rẽ ngang */
+        
         .category-tree-li:last-child::before {
           height: 20px;
           bottom: auto;
         }
-        /* Khối hộp tên danh mục theo Hình 9 */
+        
         .node-box {
           display: inline-flex;
           align-items: center;
@@ -666,7 +652,7 @@ export default function AdminCategoriesPage() {
         </div>
       </div>
 
-      {/* Hiển thị kết quả tìm kiếm nếu có từ khóa */}
+      
       {searchKeyword.trim() && searchResults.length > 0 && (
         <div className="bg-orange-50/70 border border-orange-200/80 p-3 rounded-lg text-xs text-slate-700 mb-4 flex items-center justify-between">
           <span>Tìm thấy <strong>{searchResults.length}</strong> danh mục khớp với từ khóa "{searchKeyword}". Các danh mục này được đánh dấu viền cam trên sơ đồ.</span>
@@ -679,7 +665,7 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      {/* CHẾ ĐỘ 1: SƠ ĐỒ CÂY DANH MỤC (CHUẨN HÌNH 9: LOGO + TÊN DANH MỤC) */}
+      
       {viewMode === 'TREE' ? (
         <div className="bg-white rounded-lg border border-slate-200 shadow-xs category-tree-wrapper">
           {isLoading ? (
@@ -701,7 +687,7 @@ export default function AdminCategoriesPage() {
             </div>
           ) : (
             <ul className="category-tree-root">
-              {/* Node Gốc Tổng (Tương ứng với node G: trong Hình 9, mang logo ZoraShop) */}
+              
               <li style={{ padding: '0 0 6px 0' }}>
                 <div className="node-box node-box-root">
                   <div className="w-4.5 h-4.5 shrink-0">
@@ -710,7 +696,7 @@ export default function AdminCategoriesPage() {
                   <span>G: ZoraShop</span>
                 </div>
 
-                {/* Danh sách các Cấp 1 kết nối xuống dưới */}
+                
                 <ul className="category-tree-ul">
                   {categories.map((cat1) =>
                     renderTreeBranch(cat1, null)
@@ -721,9 +707,9 @@ export default function AdminCategoriesPage() {
           )}
         </div>
       ) : (
-        /* CHẾ ĐỘ 2: PHÂN CỘT 3 CẤP (MILLER COLUMNS) */
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* ================= CỘT 1: CẤP 1 (GỐC) ================= */}
+          
           <div className="bg-white rounded-lg border border-slate-200 shadow-xs flex flex-col h-[560px]">
             <div className="p-3.5 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
               <div>
@@ -808,7 +794,7 @@ export default function AdminCategoriesPage() {
             </div>
           </div>
 
-          {/* ================= CỘT 2: CẤP 2 (NHÁNH CON) ================= */}
+          
           <div className="bg-white rounded-lg border border-slate-200 shadow-xs flex flex-col h-[560px]">
             <div className="p-3.5 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
               <div>
@@ -902,7 +888,7 @@ export default function AdminCategoriesPage() {
             </div>
           </div>
 
-          {/* ================= CỘT 3: CẤP 3 (CHI TIẾT) ================= */}
+          
           <div className="bg-white rounded-lg border border-slate-200 shadow-xs flex flex-col h-[560px]">
             <div className="p-3.5 border-b border-slate-100 bg-slate-50/70 flex items-center justify-between">
               <div>
@@ -980,7 +966,7 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      {/* Modal Thêm / Sửa Danh Mục */}
+      
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs animate-in fade-in duration-150">
           <div className="bg-white rounded-lg max-w-md w-full p-5 shadow-xl border border-slate-200">

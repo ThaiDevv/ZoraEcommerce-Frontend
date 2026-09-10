@@ -49,13 +49,11 @@ export default function SellerRegisterPage() {
         const hasSellerRole = role.includes('SELLER') || role === 'ROLE_SELLER' || role === 'SELLER'
         setIsSeller(hasSellerRole)
 
-        // Nếu tài khoản ĐÃ CÓ SHOP rồi -> Tự động chuyển thẳng vào Dashboard Quản Lý Người Bán!
         if (hasSellerRole || localStorage.getItem('current_seller_shop')) {
           navigate('/seller/orders', { replace: true })
           return
         }
 
-        // Kiểm tra xem backend đã có shop chưa (phòng trường hợp localStorage chưa cập nhật role)
         try {
           const pRes = await sellerApi.getSellerProducts({ page: 0, size: 1 })
           const items = pRes?.items || pRes?.content || []

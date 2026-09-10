@@ -3,7 +3,6 @@ import { Link } from "react-router-dom"
 import { Flame, ChevronRight, TrendingUp } from "lucide-react"
 import { productApi } from "../api/productApi"
 
-// Fallback Mock Data for Top Search Products (khi backend chưa có dữ liệu)
 const MOCK_TOP_SEARCH_PRODUCTS = [
   {
     id: 1,

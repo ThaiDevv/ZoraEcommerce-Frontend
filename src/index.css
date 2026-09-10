@@ -40,7 +40,6 @@
   background: #94a3b8;
 }
 
-
 /* ================= Luxury Background Animations ================= */
 @keyframes aurora-float-1 {
   0%, 100% {
@@ -183,7 +182,6 @@
   animation: subtle-drift-2 26s ease-in-out infinite alternate;
 }
 
-/* ================= Hiệu Ứng Loang Vùng Sáng Cam Nhẹ (Orange Light Diffusion) ================= */
 @keyframes orange-diffuse-main {
   0% {
     transform: translate(0px, 0px) scale(0.92);

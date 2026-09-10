@@ -14,7 +14,6 @@ interface CategoryItem {
 
 // 20 Standard Shopee Categories as base & fallback
 const DEFAULT_CATEGORIES: CategoryItem[] = [
-  // Hàng 1 (10 danh mục)
   {
     id: "cat-1",
     name: "Thời Trang Nam",
@@ -76,7 +75,6 @@ const DEFAULT_CATEGORIES: CategoryItem[] = [
     row: 1,
   },
 
-  // Hàng 2 (10 danh mục)
   {
     id: "cat-11",
     name: "Thời Trang Nữ",
@@ -231,7 +229,7 @@ export default function FeaturedCategories({ onSelectCategory }: FeaturedCategor
         {/* White Box Container with Orange Top Border */}
         <div className="relative bg-white shadow-xs border border-slate-200/80 border-t-[3px] border-t-[#ee4d2d] group/container">
           
-          {/* Header Title: DANH MỤC */}
+          
           <div className="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
             <h2 className="text-[14px] font-bold text-slate-700 uppercase tracking-wide">
               DANH MỤC

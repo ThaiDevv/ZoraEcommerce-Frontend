@@ -222,7 +222,6 @@ export default function DailyDiscover({ searchKeyword, categoryId }: DailyDiscov
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
 
-  // Fetch recommended products from backend API (tách riêng với tìm kiếm)
   const loadProducts = useCallback(
     async (pageIndex: number, isAppend: boolean) => {
       try {
@@ -314,11 +313,11 @@ export default function DailyDiscover({ searchKeyword, categoryId }: DailyDiscov
     <section id="daily-discover" className="w-full py-3">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
         
-        {/* ================= 1. TAB HEADER: GỢI Ý HÔM NAY ================= */}
+        
         <div className="bg-white rounded-md p-3.5 shadow-xs border border-slate-200/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             
-            {/* Title: GỢI Ý HÔM NAY (Đơn giản, tách biệt) */}
+            
             <div className="flex items-center gap-2.5">
               <div className="w-2.5 h-6 bg-[#ee4d2d] rounded-full" />
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">

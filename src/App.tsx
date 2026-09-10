@@ -25,7 +25,7 @@ import AdminCategoriesPage from './pages/admin/AdminCategoriesPage'
 export default function App() {
   return (
     <BrowserRouter>
-      {/* Tự động cuộn lên đầu trang khi chuyển trang */}
+      
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />

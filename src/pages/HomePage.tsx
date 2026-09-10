@@ -15,7 +15,6 @@ export default function HomePage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
 
-  // Tách rời giao diện: Nếu là tài khoản ADMIN đã đăng nhập, tự động chuyển vào Admin Dashboard
   useEffect(() => {
     try {
       const storedUser = localStorage.getItem("user")
@@ -55,12 +54,12 @@ export default function HomePage() {
         <MainHeader />
       </div>
 
-      {/* Main Page Sections: Nổi bật sạch sẽ trên nền subtle background */}
+      
       <main className="relative z-10 flex-1 space-y-3 pb-8">
         {/* 2. Hero Banner Slider + 2 Side Banners + 8 Quick Service Badges */}
         <BannerSlider />
 
-        {/* 3. Featured Categories - Click chuyển sang trang tìm kiếm theo danh mục */}
+        
         <FeaturedCategories
           onSelectCategory={(id) => {
             if (id) {
@@ -75,7 +74,7 @@ export default function HomePage() {
         {/* 5. Top Search Products */}
         <TopSearchSection />
 
-        {/* 6. Daily Discover Products: Luôn luôn hiển thị Gợi Ý Hôm Nay thuần túy, không bị đè che */}
+        
         <DailyDiscover />
 
         {/* 7. Comprehensive 5-Column Category Tree */}
