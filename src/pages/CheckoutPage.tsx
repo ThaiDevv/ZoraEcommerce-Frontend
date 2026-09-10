@@ -713,34 +713,6 @@ export default function CheckoutPage() {
                 })}
               </div>
 
-              {/* Payment Method Details Note */}
-              <div className="p-3.5 bg-slate-50 border border-slate-200/70 rounded-xs text-xs space-y-1">
-                {selectedPaymentMethod === 'COD' && (
-                  <p className="text-slate-600">
-                    💵 <strong>Thanh toán khi nhận hàng (COD):</strong> Bạn sẽ thanh toán số tiền đơn hàng cho shipper khi kiện hàng được giao đến địa chỉ của bạn.
-                  </p>
-                )}
-                {selectedPaymentMethod === 'VNPAY' && (
-                  <p className="text-slate-600">
-                    💳 <strong>Cổng thanh toán VNPay Sandbox:</strong> Đơn hàng sẽ tự động kết nối qua API thanh toán độc lập (`POST /api/v1/orders/{'{'}orderId{'}'}/payment`) và chuyển sang trạng thái <strong>ĐÃ XÁC NHẬN (CONFIRMED)</strong> tức thì.
-                  </p>
-                )}
-                {selectedPaymentMethod === 'BANK_TRANSFER' && (
-                  <p className="text-slate-600">
-                    🏦 <strong>Chuyển khoản Ngân hàng:</strong> Hỗ trợ tất cả ngân hàng nội địa Napas 24/7. Giao dịch thanh toán được xử lý và xác nhận bảo mật.
-                  </p>
-                )}
-                {selectedPaymentMethod === 'MOMO' && (
-                  <p className="text-slate-600">
-                    📱 <strong>Ví điện tử MoMo:</strong> Thanh toán tức thì qua ví MoMo Pay an toàn và tiện lợi.
-                  </p>
-                )}
-                {selectedPaymentMethod === 'CREDIT_CARD' && (
-                  <p className="text-slate-600">
-                    🔒 <strong>Thẻ Quốc tế (Visa / Master):</strong> Bảo mật đạt chuẩn thanh toán quốc tế PCI-DSS.
-                  </p>
-                )}
-              </div>
             </div>
 
             {/* 6. SHOPEE STICKY BOTTOM CHECKOUT SUMMARY */}
