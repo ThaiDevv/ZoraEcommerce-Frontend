@@ -193,6 +193,8 @@ export default function SellerOrdersPage() {
     }
   }
 
+  const isPaymentCompleted = (status?: string) => status === 'COMPLETED' || status === 'PAID'
+
   // Filter orders by search text
   const filteredOrders = orders.filter((o) => {
     if (!searchQuery.trim()) return true
@@ -349,8 +351,14 @@ export default function SellerOrdersPage() {
 
                   <div className="flex items-center gap-2">
                     {getStatusBadge(order.status)}
-                    <span className="text-[11px] px-2 py-0.5 rounded font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                      {order.paymentMethod} • {order.paymentStatus === 'PAID' ? 'Đã TT' : 'Chưa TT'}
+                    <span
+                      className={`text-[11px] px-2 py-0.5 rounded font-medium border ${
+                        isPaymentCompleted(order.paymentStatus)
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-slate-100 text-slate-600 border-slate-200'
+                      }`}
+                    >
+                      {order.paymentMethod} • {isPaymentCompleted(order.paymentStatus) ? 'Đã thanh toán' : (order.paymentMethod === 'COD' ? 'Thu tiền khi giao' : 'Chưa thanh toán')}
                     </span>
                   </div>
                 </div>
@@ -502,12 +510,14 @@ export default function SellerOrdersPage() {
                         <p><strong className="text-slate-800">Hình thức:</strong> {orderDetail.paymentMethod}</p>
                         <p>
                           <strong className="text-slate-800">Trạng thái:</strong>{' '}
-                          <span className={`px-2 py-0.5 rounded-xs text-[11px] font-semibold ${
-                            orderDetail.paymentStatus === 'PAID' 
-                              ? 'bg-orange-50 text-[#ee4d2d] border border-orange-200/80' 
-                              : 'bg-slate-100 text-slate-700 border border-slate-200'
-                          }`}>
-                            {orderDetail.paymentStatus === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'}
+                          <span
+                            className={`px-2 py-0.5 rounded-xs text-[11px] font-semibold border ${
+                              isPaymentCompleted(orderDetail.paymentStatus)
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : 'bg-slate-100 text-slate-700 border-slate-200'
+                            }`}
+                          >
+                            {isPaymentCompleted(orderDetail.paymentStatus) ? 'Đã thanh toán' : (orderDetail.paymentMethod === 'COD' ? 'Thu tiền khi giao' : 'Chưa thanh toán')}
                           </span>
                         </p>
                         {orderDetail.transactionId && (
