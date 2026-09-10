@@ -4,7 +4,8 @@ import type {
   RegisterRequest,
   LoginResponse,
   RegisterResponse,
-  User
+  User,
+  UpdateProfilePayload
 } from "../types/auth"
 
 export const authApi = {
@@ -34,7 +35,7 @@ export const authApi = {
     return res as unknown as User
   },
 
-  updateProfile: async (data: Partial<User>): Promise<User> => {
+  updateProfile: async (data: Partial<User> | UpdateProfilePayload): Promise<User> => {
     const res = await axiosClient.put<any, User>("/users/me", data)
     return res as unknown as User
   },

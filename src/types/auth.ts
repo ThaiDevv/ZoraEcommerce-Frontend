@@ -1,3 +1,5 @@
+export type UserSex = 'MALE' | 'FEMALE'
+
 export interface User {
   id?: number
   email: string
@@ -6,6 +8,15 @@ export interface User {
   avatarUrl?: string
   role?: string
   isActive?: boolean
+  sex?: UserSex | null
+  dateOfBirth?: string | null
+}
+
+export interface UpdateProfilePayload {
+  fullName: string
+  phone?: string
+  sex?: UserSex
+  birthDate?: string
 }
 
 export interface LoginRequest {

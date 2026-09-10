@@ -48,7 +48,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
     role: 'BUYER',
   })
   const [username, setUsername] = useState<string>('thaimuado12')
-  const [gender, setGender] = useState<'MALE' | 'FEMALE' | 'OTHER'>('MALE')
+  const [gender, setGender] = useState<'MALE' | 'FEMALE'>('MALE')
   const [birthDay, setBirthDay] = useState<string>('26')
   const [birthMonth, setBirthMonth] = useState<string>('10')
   const [birthYear, setBirthYear] = useState<string>('2002')
@@ -87,6 +87,28 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
     }
   }, [location.pathname])
 
+  const applyProfileData = (data: any) => {
+    setUser((prev) => ({
+      ...prev,
+      ...data,
+      avatarUrl: data.avatarUrl || prev.avatarUrl,
+    }))
+
+    if (data.sex) {
+      setGender(data.sex === 'FEMALE' ? 'FEMALE' : 'MALE')
+    }
+
+    const rawDob = data.dateOfBirth || data.birthDate
+    if (rawDob) {
+      const parts = String(rawDob).split('-')
+      if (parts.length === 3) {
+        setBirthYear(parts[0])
+        setBirthMonth(String(parseInt(parts[1], 10)))
+        setBirthDay(String(parseInt(parts[2], 10)))
+      }
+    }
+  }
+
   // Load user data on mount
   useEffect(() => {
     const storedUsername = localStorage.getItem('username')
@@ -96,11 +118,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
     if (storedUser) {
       try {
         const parsed = JSON.parse(storedUser)
-        setUser((prev) => ({
-          ...prev,
-          ...parsed,
-          avatarUrl: parsed.avatarUrl || prev.avatarUrl,
-        }))
+        applyProfileData(parsed)
       } catch (e) {
         console.warn('Could not parse user:', e)
       }
@@ -113,11 +131,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
         .getProfile()
         .then((data) => {
           if (data) {
-            setUser((prev) => ({
-              ...prev,
-              ...data,
-              avatarUrl: data.avatarUrl || prev.avatarUrl,
-            }))
+            applyProfileData(data)
             localStorage.setItem('user', JSON.stringify(data))
           }
         })
@@ -280,13 +294,31 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
 
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+      const formattedMonth = String(birthMonth).padStart(2, '0')
+      const formattedDay = String(birthDay).padStart(2, '0')
+      const birthDateStr = `${birthYear}-${formattedMonth}-${formattedDay}`
+      const sexVal: 'MALE' | 'FEMALE' = gender === 'FEMALE' ? 'FEMALE' : 'MALE'
+
       if (token) {
-        await authApi.updateProfile({
+        const updated = await authApi.updateProfile({
           fullName: user.fullName,
           phone: user.phone,
+          sex: sexVal,
+          birthDate: birthDateStr,
         })
+        if (updated) {
+          applyProfileData(updated)
+          localStorage.setItem('user', JSON.stringify(updated))
+        }
+      } else {
+        const updatedLocal = {
+          ...user,
+          sex: sexVal,
+          dateOfBirth: birthDateStr,
+        }
+        setUser(updatedLocal)
+        localStorage.setItem('user', JSON.stringify(updatedLocal))
       }
-      localStorage.setItem('user', JSON.stringify(user))
       window.dispatchEvent(new Event('cartUpdated'))
       setProfileSuccessMsg('Hồ sơ của bạn đã được cập nhật thành công!')
       setTimeout(() => setProfileSuccessMsg(null), 4000)
@@ -604,17 +636,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                           />
                           <span>Nữ</span>
                         </label>
-                        <label className="inline-flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="OTHER"
-                            checked={gender === 'OTHER'}
-                            onChange={() => setGender('OTHER')}
-                            className="text-[#ee4d2d] focus:ring-[#ee4d2d]"
-                          />
-                          <span>Khác</span>
-                        </label>
+
                       </div>
                     </div>
 
