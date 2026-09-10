@@ -11,7 +11,8 @@ import {
   CheckCircle2,
   RefreshCw,
   Plus,
-  ShieldCheck
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react'
 import MainHeader from '../components/MainHeader'
 import { authApi } from '../api/authApi'
@@ -54,6 +55,10 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
   const [birthYear, setBirthYear] = useState<string>('2002')
   const [isSavingProfile, setIsSavingProfile] = useState(false)
   const [profileSuccessMsg, setProfileSuccessMsg] = useState<string | null>(null)
+  const [profileErrorMsg, setProfileErrorMsg] = useState<string | null>(null)
+  const [isEditingPhone, setIsEditingPhone] = useState(false)
+  const [phoneInput, setPhoneInput] = useState('')
+  const [phoneError, setPhoneError] = useState<string | null>(null)
 
   // Orders State
   const [orders, setOrders] = useState<HistoryOrder[]>([])
@@ -93,6 +98,10 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
       ...data,
       avatarUrl: data.avatarUrl || prev.avatarUrl,
     }))
+
+    if (data.phone) {
+      setPhoneInput(data.phone)
+    }
 
     if (data.sex) {
       setGender(data.sex === 'FEMALE' ? 'FEMALE' : 'MALE')
@@ -289,8 +298,29 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSavingProfile(true)
     setProfileSuccessMsg(null)
+    setProfileErrorMsg(null)
+    setPhoneError(null)
+
+    if (!user.fullName || !user.fullName.trim()) {
+      setProfileErrorMsg('Họ và tên không được để trống.')
+      return
+    }
+
+    const targetPhone = isEditingPhone ? phoneInput.trim() : (user.phone ? user.phone.trim() : '')
+
+    if (isEditingPhone) {
+      if (!targetPhone) {
+        setPhoneError('Vui lòng nhập số điện thoại hoặc nhấn Hủy.')
+        return
+      }
+      if (!/^(0[3|5|7|8|9])[0-9]{8}$/.test(targetPhone)) {
+        setPhoneError('Số điện thoại không hợp lệ (cần 10 chữ số, ví dụ: 0912345678).')
+        return
+      }
+    }
+
+    setIsSavingProfile(true)
 
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token')
@@ -301,8 +331,8 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
 
       if (token) {
         const updated = await authApi.updateProfile({
-          fullName: user.fullName,
-          phone: user.phone,
+          fullName: user.fullName.trim(),
+          phone: targetPhone || undefined,
           sex: sexVal,
           birthDate: birthDateStr,
         })
@@ -313,17 +343,28 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
       } else {
         const updatedLocal = {
           ...user,
+          fullName: user.fullName.trim(),
+          phone: targetPhone || user.phone,
           sex: sexVal,
           dateOfBirth: birthDateStr,
         }
         setUser(updatedLocal)
         localStorage.setItem('user', JSON.stringify(updatedLocal))
       }
+
+      setIsEditingPhone(false)
+      setPhoneError(null)
       window.dispatchEvent(new Event('cartUpdated'))
       setProfileSuccessMsg('Hồ sơ của bạn đã được cập nhật thành công!')
       setTimeout(() => setProfileSuccessMsg(null), 4000)
     } catch (err: any) {
-      setProfileSuccessMsg(err.message || 'Không thể lưu hồ sơ lúc này.')
+      const errorMsg = err?.message || 'Không thể lưu hồ sơ lúc này.'
+      setProfileErrorMsg(errorMsg)
+      if (errorMsg.includes('Số điện thoại') || errorMsg.toLowerCase().includes('phone')) {
+        setPhoneError(errorMsg)
+        setIsEditingPhone(true)
+      }
+      setTimeout(() => setProfileErrorMsg(null), 5000)
     } finally {
       setIsSavingProfile(false)
     }
@@ -547,9 +588,16 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                 </div>
 
                 {profileSuccessMsg && (
-                  <div className="mt-4 p-3 bg-orange-50 border border-orange-200 text-[#ee4d2d] rounded-sm text-[13px] flex items-center gap-2 animate-in fade-in">
-                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#ee4d2d]" />
+                  <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-sm text-[13px] flex items-center gap-2 animate-in fade-in">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
                     <span>{profileSuccessMsg}</span>
+                  </div>
+                )}
+
+                {profileErrorMsg && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-sm text-[13px] flex items-center gap-2 animate-in fade-in">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                    <span>{profileErrorMsg}</span>
                   </div>
                 )}
 
@@ -595,18 +643,82 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                     </div>
 
                     {/* Phone */}
-                    <div className="grid grid-cols-12 items-center text-[13px]">
-                      <label className="col-span-4 text-right pr-6 text-slate-500">Số điện thoại</label>
-                      <div className="col-span-8 flex items-center gap-3">
-                        <span className="text-slate-800">
-                          {user.phone ? `*******${user.phone.slice(-3)}` : '0987******'}
-                        </span>
-                        <button
-                          type="button"
-                          className="text-[#ee4d2d] hover:underline text-[12px] cursor-pointer"
-                        >
-                          Thay Đổi
-                        </button>
+                    <div className="grid grid-cols-12 items-start text-[13px]">
+                      <label className="col-span-4 text-right pr-6 pt-2 text-slate-500">Số điện thoại</label>
+                      <div className="col-span-8">
+                        {!isEditingPhone ? (
+                          <div className="flex items-center gap-3 py-1.5">
+                            <span className="text-slate-800 font-medium">
+                              {user.phone ? (
+                                user.phone.length >= 10
+                                  ? `${user.phone.slice(0, 3)}****${user.phone.slice(-3)}`
+                                  : `*******${user.phone.slice(-3)}`
+                              ) : (
+                                <span className="text-slate-400 font-normal italic">Chưa liên kết</span>
+                              )}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPhoneInput(user.phone || '')
+                                setIsEditingPhone(true)
+                                setPhoneError(null)
+                                setProfileErrorMsg(null)
+                              }}
+                              className="text-[#ee4d2d] hover:underline text-[12px] font-medium cursor-pointer"
+                            >
+                              {user.phone ? 'Thay Đổi' : 'Thêm'}
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="space-y-1.5 max-w-sm">
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="tel"
+                                value={phoneInput}
+                                onChange={(e) => {
+                                  const val = e.target.value.replace(/\D/g, '')
+                                  setPhoneInput(val)
+                                  if (phoneError) setPhoneError(null)
+                                }}
+                                placeholder="Nhập số điện thoại (10 chữ số)"
+                                maxLength={10}
+                                autoFocus
+                                className={`flex-1 px-3 py-2 border rounded-xs text-[13px] focus:outline-none transition-colors ${
+                                  phoneError
+                                    ? 'border-red-400 focus:border-red-500'
+                                    : 'border-slate-300 focus:border-[#ee4d2d]'
+                                }`}
+                              />
+                              <button
+                                type="submit"
+                                disabled={isSavingProfile}
+                                className="px-3 py-2 text-[12px] text-white bg-[#ee4d2d] hover:bg-[#d93c1d] rounded-xs transition-colors shrink-0 cursor-pointer font-medium disabled:opacity-50"
+                              >
+                                {isSavingProfile ? '...' : 'Lưu'}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsEditingPhone(false)
+                                  setPhoneInput(user.phone || '')
+                                  setPhoneError(null)
+                                }}
+                                className="px-3 py-2 text-[12px] text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xs transition-colors shrink-0 cursor-pointer"
+                              >
+                                Hủy
+                              </button>
+                            </div>
+                            {phoneError && (
+                              <p className="text-[12px] text-red-500 flex items-center gap-1 animate-in fade-in">
+                                {phoneError}
+                              </p>
+                            )}
+                            <p className="text-[11px] text-slate-400">
+                              Định dạng số điện thoại Việt Nam gồm 10 chữ số (ví dụ: 0912345678, 0381234567)
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
 
