@@ -53,6 +53,16 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
   const [birthDay, setBirthDay] = useState<string>('26')
   const [birthMonth, setBirthMonth] = useState<string>('10')
   const [birthYear, setBirthYear] = useState<string>('2002')
+
+  // Toast notification state
+  const [toastMessage, setToastMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null)
+
+  const showToast = (type: 'success' | 'error' | 'info', text: string) => {
+    setToastMessage({ type, text })
+    setTimeout(() => {
+      setToastMessage((prev) => (prev?.text === text ? null : prev))
+    }, 3500)
+  }
   const [isSavingProfile, setIsSavingProfile] = useState(false)
   const [profileSuccessMsg, setProfileSuccessMsg] = useState<string | null>(null)
   const [profileErrorMsg, setProfileErrorMsg] = useState<string | null>(null)
@@ -207,7 +217,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
       })
       await fetchAddresses()
     } catch (err: any) {
-      alert(err.message || 'Không thể thêm địa chỉ mới')
+      showToast('error', err.message || 'Không thể thêm địa chỉ mới')
     }
   }
 
@@ -216,7 +226,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
       await orderApi.setDefaultAddress(id)
       await fetchAddresses()
     } catch (err: any) {
-      alert(err.message || 'Không thể đặt làm địa chỉ mặc định')
+      showToast('error', err.message || 'Không thể đặt làm địa chỉ mặc định')
     }
   }
 
@@ -226,7 +236,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
       await orderApi.deleteAddress(id)
       await fetchAddresses()
     } catch (err: any) {
-      alert(err.message || 'Không thể xóa địa chỉ')
+      showToast('error', err.message || 'Không thể xóa địa chỉ')
     }
   }
 
@@ -378,9 +388,9 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
       setOrders((prev) =>
         prev.map((o) => (o.orderId === orderId ? { ...o, status: 'CANCELLED' as OrderStatus } : o))
       )
-      alert('Đã gửi yêu cầu hủy đơn hàng thành công!')
+      showToast('success', 'Đã gửi yêu cầu hủy đơn hàng thành công!')
     } catch (err: any) {
-      alert(err.message || 'Không thể hủy đơn hàng lúc này.')
+      showToast('error', err.message || 'Không thể hủy đơn hàng lúc này.')
     } finally {
       setCancellingOrderId(null)
     }
@@ -448,6 +458,38 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
   return (
     <div className="min-h-screen bg-[#f5f5f5] text-slate-800 font-sans flex flex-col">
       <MainHeader />
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-24 right-6 z-[100] transition-all duration-200 animate-in fade-in slide-in-from-top-2">
+          <div
+            className={`flex items-center gap-3 px-4 py-3 rounded-xs shadow-xl text-xs sm:text-sm font-medium border ${
+              toastMessage.type === 'success'
+                ? 'bg-neutral-900 text-white border-neutral-800 shadow-neutral-950/20'
+                : toastMessage.type === 'error'
+                ? 'bg-rose-600 text-white border-rose-500 shadow-rose-950/20'
+                : 'bg-neutral-900 text-white border-neutral-800 shadow-neutral-950/20'
+            }`}
+          >
+            {toastMessage.type === 'success' && (
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            )}
+            {toastMessage.type === 'error' && (
+              <AlertCircle className="w-4 h-4 text-white shrink-0" />
+            )}
+            {toastMessage.type === 'info' && (
+              <Store className="w-4 h-4 text-orange-400 shrink-0" />
+            )}
+            <span>{toastMessage.text}</span>
+            <button
+              onClick={() => setToastMessage(null)}
+              className="ml-2 text-neutral-400 hover:text-white p-0.5 cursor-pointer text-xs"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
@@ -545,7 +587,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
 
               
               <button
-                onClick={() => alert('Chức năng Thông Báo đang được cập nhật')}
+                onClick={() => showToast('info', 'Chức năng Thông Báo đang được cập nhật')}
                 className="w-full flex items-center gap-2.5 px-2 py-2 text-slate-700 hover:text-[#ee4d2d] transition-colors cursor-pointer font-medium"
               >
                 <Bell className="w-4 h-4 text-amber-500" />
@@ -554,7 +596,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
 
               {/* Menu Item: Kho Voucher */}
               <button
-                onClick={() => alert('Kho voucher của bạn có 5 mã giảm giá!')}
+                onClick={() => showToast('info', 'Kho voucher của bạn có 5 mã giảm giá!')}
                 className="w-full flex items-center gap-2.5 px-2 py-2 text-slate-700 hover:text-[#ee4d2d] transition-colors cursor-pointer font-medium"
               >
                 <Ticket className="w-4 h-4 text-red-500" />
@@ -815,7 +857,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                     </div>
                     <button
                       type="button"
-                      onClick={() => alert('Tính năng tải ảnh avatar từ thiết bị sẽ sớm ra mắt')}
+                      onClick={() => showToast('info', 'Tính năng tải ảnh avatar từ thiết bị sẽ sớm ra mắt')}
                       className="px-4 py-2 border border-slate-300 hover:bg-slate-50 text-[13px] text-slate-700 rounded-xs transition-colors cursor-pointer shadow-2xs"
                     >
                       Chọn Ảnh
@@ -989,7 +1031,7 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                               {order.status === 'DELIVERED' || order.status === 'COMPLETED' ? (
                                 <>
                                   <button
-                                    onClick={() => alert('Chức năng đánh giá sản phẩm đang mở')}
+                                    onClick={() => showToast('info', 'Chức năng đánh giá sản phẩm đang mở')}
                                     className="px-3.5 py-1.5 border border-slate-300 hover:bg-slate-100 text-slate-700 text-[12px] font-medium rounded-xs cursor-pointer transition-colors"
                                   >
                                     Đánh Giá

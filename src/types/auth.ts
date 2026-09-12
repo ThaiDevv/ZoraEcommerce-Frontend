@@ -30,6 +30,10 @@ export interface RegisterRequest {
   fullName: string
   fullname?: string
   phone?: string
+  sex?: UserSex
+  birthDay?: string
+  BirthDay?: string
+  dateOfBirth?: string
 }
 
 export interface LoginResponse {

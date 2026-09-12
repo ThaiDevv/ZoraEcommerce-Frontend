@@ -38,6 +38,16 @@ export default function OrderDetailPage() {
   const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false)
   const [paymentCopied, setPaymentCopied] = useState<boolean>(false)
 
+  // Toast notification state
+  const [toastMessage, setToastMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null)
+
+  const showToast = (type: 'success' | 'error' | 'info', text: string) => {
+    setToastMessage({ type, text })
+    setTimeout(() => {
+      setToastMessage((prev) => (prev?.text === text ? null : prev))
+    }, 3500)
+  }
+
   // Cancel Modal states
   const [showCancelModal, setShowCancelModal] = useState<boolean>(false)
   const [cancelReason, setCancelReason] = useState<string>('Muốn thay đổi địa chỉ giao hàng')
@@ -90,9 +100,13 @@ export default function OrderDetailPage() {
       await orderApi.cancelOrder(order.orderId, finalReason)
       setOrder((prev) => (prev ? { ...prev, statusType: 'CANCELLED' as OrderStatus } : null))
       setShowCancelModal(false)
-      alert('Đơn hàng đã được hủy thành công.')
+      showToast('success', 'Đơn hàng đã được hủy thành công.')
+      try {
+        const refreshed = await orderApi.getOrderDetail(order.orderId)
+        setOrder(refreshed)
+      } catch (_) {}
     } catch (err: any) {
-      alert(err.message || 'Không thể hủy đơn hàng vào lúc này.')
+      showToast('error', err.message || 'Không thể hủy đơn hàng vào lúc này.')
     } finally {
       setIsCancelling(false)
     }
@@ -107,9 +121,9 @@ export default function OrderDetailPage() {
       setPaymentInfo(payRes)
       const updated = await orderApi.getOrderDetail(order.orderId)
       setOrder(updated)
-      alert(`Thanh toán thành công qua cổng ${payRes.provider}! Trạng thái giao dịch: ${payRes.status}`)
+      showToast('success', `Thanh toán thành công qua cổng ${payRes.provider}! Trạng thái giao dịch: ${payRes.status}`)
     } catch (err: any) {
-      alert(err.message || 'Không thể xử lý thanh toán vào lúc này.')
+      showToast('error', err.message || 'Không thể xử lý thanh toán vào lúc này.')
     } finally {
       setIsProcessingPayment(false)
     }
@@ -239,6 +253,38 @@ export default function OrderDetailPage() {
     <div className="min-h-screen bg-[#f5f5f5] flex flex-col font-sans">
       {/* Header */}
       <MainHeader />
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-24 right-6 z-[100] transition-all duration-200 animate-in fade-in slide-in-from-top-2">
+          <div
+            className={`flex items-center gap-3 px-4 py-3 rounded-xs shadow-xl text-xs sm:text-sm font-medium border ${
+              toastMessage.type === 'success'
+                ? 'bg-neutral-900 text-white border-neutral-800 shadow-neutral-950/20'
+                : toastMessage.type === 'error'
+                ? 'bg-rose-600 text-white border-rose-500 shadow-rose-950/20'
+                : 'bg-neutral-900 text-white border-neutral-800 shadow-neutral-950/20'
+            }`}
+          >
+            {toastMessage.type === 'success' && (
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            )}
+            {toastMessage.type === 'error' && (
+              <AlertCircle className="w-4 h-4 text-white shrink-0" />
+            )}
+            {toastMessage.type === 'info' && (
+              <MessageSquare className="w-4 h-4 text-[#ee4d2d] shrink-0" />
+            )}
+            <span>{toastMessage.text}</span>
+            <button
+              onClick={() => setToastMessage(null)}
+              className="ml-2 text-neutral-400 hover:text-white p-0.5 cursor-pointer text-xs"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
         {/* Navigation back bar */}
@@ -505,7 +551,7 @@ export default function OrderDetailPage() {
 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => alert(`Bắt đầu trò chuyện với shop: ${order.shopName}`)}
+                    onClick={() => showToast('info', `Bắt đầu trò chuyện với shop: ${order.shopName}`)}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-slate-300 hover:bg-white text-slate-700 text-xs font-medium rounded-xs cursor-pointer transition-colors"
                   >
                     <MessageSquare className="w-3.5 h-3.5 text-[#ee4d2d]" />
@@ -738,7 +784,7 @@ export default function OrderDetailPage() {
                 {(order.statusType === 'DELIVERED' || order.statusType === 'COMPLETED') && (
                   <>
                     <button
-                      onClick={() => alert('Mở form đánh giá sản phẩm')}
+                      onClick={() => showToast('info', 'Tính năng đánh giá sản phẩm đang được cập nhật.')}
                       className="px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xs cursor-pointer transition-colors"
                     >
                       Đánh Giá

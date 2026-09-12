@@ -7,6 +7,7 @@ import {
   EyeOff,
   User,
   Phone,
+  Calendar,
   Loader2,
   AlertCircle,
   CheckCircle2,
@@ -23,6 +24,8 @@ export default function RegisterPage() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
+  const [sex, setSex] = useState<'MALE' | 'FEMALE'>('MALE')
+  const [birthDay, setBirthDay] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [agreeTerms, setAgreeTerms] = useState(true)
@@ -128,6 +131,11 @@ export default function RegisterPage() {
       return
     }
 
+    if (!phone.trim()) {
+      setErrorMessage('Vui lòng nhập số điện thoại')
+      return
+    }
+
     if (!email.trim()) {
       setErrorMessage('Vui lòng nhập địa chỉ email')
       return
@@ -158,6 +166,8 @@ export default function RegisterPage() {
         email: normalizedEmail,
         password,
         phone: phone.trim() ? phone.trim() : undefined,
+        sex,
+        birthDay: birthDay.trim() ? birthDay.trim() : undefined,
       })
 
       setSuccessMessage('Đăng ký tài khoản thành công! Đang tự động đăng nhập...')
@@ -493,6 +503,71 @@ export default function RegisterPage() {
                       required
                       className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-[#ee4d2d] focus:ring-2 focus:ring-[#ee4d2d]/15 transition-all"
                     />
+                  </div>
+                </div>
+
+                {/* Row 3: Sex & Date of Birth */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Sex */}
+                  <div className="space-y-1">
+                    <label className="block text-xs font-medium text-slate-700">
+                      Giới tính <span className="text-[#ee4d2d]">*</span>
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <label className={`flex items-center justify-center gap-1.5 py-2 px-3 border rounded-xl cursor-pointer text-xs font-medium transition-all ${
+                        sex === 'MALE'
+                          ? 'border-[#ee4d2d] bg-orange-50/70 text-[#ee4d2d] ring-1 ring-[#ee4d2d]/25 font-semibold'
+                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="sex"
+                          value="MALE"
+                          checked={sex === 'MALE'}
+                          onChange={() => setSex('MALE')}
+                          className="sr-only"
+                        />
+                        <span>Nam</span>
+                      </label>
+                      <label className={`flex items-center justify-center gap-1.5 py-2 px-3 border rounded-xl cursor-pointer text-xs font-medium transition-all ${
+                        sex === 'FEMALE'
+                          ? 'border-[#ee4d2d] bg-orange-50/70 text-[#ee4d2d] ring-1 ring-[#ee4d2d]/25 font-semibold'
+                          : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="sex"
+                          value="FEMALE"
+                          checked={sex === 'FEMALE'}
+                          onChange={() => setSex('FEMALE')}
+                          className="sr-only"
+                        />
+                        <span>Nữ</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Date of Birth */}
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="register-birthday"
+                      className="block text-xs font-medium text-slate-700"
+                    >
+                      Ngày sinh
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <input
+                        id="register-birthday"
+                        type="date"
+                        value={birthDay}
+                        onChange={(e) => setBirthDay(e.target.value)}
+                        max={new Date().toISOString().split('T')[0]}
+                        className="w-full pl-9 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-xl text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-[#ee4d2d] focus:ring-2 focus:ring-[#ee4d2d]/15 transition-all"
+                      />
+                    </div>
                   </div>
                 </div>
 

@@ -506,7 +506,7 @@ export default function SellerInventoryPage() {
                                   ? 'bg-amber-100 text-amber-800'
                                   : 'bg-slate-100 text-slate-700'
                               }`}>
-                                {log.type === 'IN' ? 'IN (Nhập)' : log.type === 'OUT' ? 'OUT (Giảm/Xuất)' : log.type === 'RESERVED' ? 'RESERVED (Giữ chỗ)' : log.type === 'RELEASED' ? 'RELEASED (Hoàn kho)' : log.type}
+                                {log.type}
                               </span>
                             </td>
                             <td className="p-3 text-center font-bold">

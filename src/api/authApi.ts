@@ -18,13 +18,16 @@ export const authApi = {
   },
 
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
-    // Spring Boot Jackson DTO requires 'fullname' (lowercase 'n')
+    // Spring Boot Jackson DTO requires 'fullname', 'sex', and 'birthDay'/'BirthDay'
     const payload = {
       email: data.email.trim().toLowerCase(),
       password: data.password,
       fullname: data.fullName.trim(),
       fullName: data.fullName.trim(),
       phone: data.phone?.trim() ? data.phone.trim() : null,
+      sex: data.sex || null,
+      birthDay: data.birthDay || data.BirthDay || null,
+      BirthDay: data.birthDay || data.BirthDay || null,
     }
     const res = await axiosClient.post<any, RegisterResponse>("/auth/register", payload)
     return res as unknown as RegisterResponse
