@@ -15,7 +15,7 @@ import {
   AlertCircle
 } from 'lucide-react'
 import MainHeader from '../components/MainHeader'
-import { authApi } from '../api/authApi'
+import { authApi, signOut } from '../api/authApi'
 import { orderApi } from '../api/orderApi'
 import type { User } from '../types/auth'
 import type { HistoryOrder, OrderStatus, AddressResponse } from '../types/order'
@@ -262,15 +262,29 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
     setPasswordMsg(null)
     try {
       await authApi.changePassword(oldPassword, newPassword)
-      setPasswordMsg({ type: 'success', text: 'Đổi mật khẩu thành công!' })
+      setPasswordMsg({ type: 'success', text: 'Đổi mật khẩu thành công! Vui lòng đăng nhập lại với mật khẩu mới.' })
       setOldPassword('')
       setNewPassword('')
       setConfirmPassword('')
+      // Backend revokes every refresh token on password change, so the current session cannot be renewed
+      setTimeout(async () => {
+        await signOut()
+        navigate('/login', { replace: true })
+      }, 1500)
     } catch (err: any) {
       setPasswordMsg({ type: 'error', text: err?.message || 'Đổi mật khẩu thất bại. Vui lòng kiểm tra lại mật khẩu cũ.' })
     } finally {
       setIsSubmittingPassword(false)
     }
+  }
+
+  const [isLoggingOutAll, setIsLoggingOutAll] = useState(false)
+
+  const handleLogoutAllDevices = async () => {
+    if (!window.confirm('Bạn có chắc muốn đăng xuất khỏi tất cả thiết bị?')) return
+    setIsLoggingOutAll(true)
+    await signOut({ allDevices: true })
+    navigate('/login', { replace: true })
   }
 
   // Load orders when activeTab is 'orders'
@@ -1324,6 +1338,21 @@ export default function UserProfilePage({ defaultTab = 'profile' }: UserProfileP
                     {isSubmittingPassword ? 'Đang xử lý...' : 'Xác Nhận'}
                   </button>
                 </form>
+
+                <div className="max-w-md mt-8 pt-6 border-t border-slate-100 text-[13px]">
+                  <h2 className="text-[15px] font-medium text-slate-900">Phiên đăng nhập</h2>
+                  <p className="text-slate-500 mt-1">
+                    Đăng xuất tài khoản khỏi tất cả thiết bị và trình duyệt đang đăng nhập, bao gồm cả thiết bị này.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleLogoutAllDevices}
+                    disabled={isLoggingOutAll}
+                    className="mt-3 px-6 py-2.5 border border-[#ee4d2d] text-[#ee4d2d] hover:bg-[#ee4d2d]/5 text-[13px] font-medium rounded-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {isLoggingOutAll ? 'Đang đăng xuất...' : 'Đăng xuất khỏi tất cả thiết bị'}
+                  </button>
+                </div>
               </div>
             )}
 

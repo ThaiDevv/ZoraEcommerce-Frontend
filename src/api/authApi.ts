@@ -1,4 +1,5 @@
-import axiosClient from "./axiosClient"
+import axiosClient, { refreshAccessToken } from "./axiosClient"
+import { clearAuth, getRefreshToken } from "../utils/authStorage"
 import type {
   LoginRequest,
   RegisterRequest,
@@ -33,6 +34,19 @@ export const authApi = {
     return res as unknown as RegisterResponse
   },
 
+  // Rotates the token pair; serialised with the automatic refresh in axiosClient
+  refreshToken: async (): Promise<string> => refreshAccessToken(),
+
+  // Revokes a single refresh token (current device). Backend returns 204.
+  logout: async (refreshToken: string): Promise<void> => {
+    await axiosClient.post("/auth/logout", { refreshToken })
+  },
+
+  // Revokes every refresh token of the current user (all devices). Requires access token.
+  logoutAll: async (): Promise<void> => {
+    await axiosClient.post("/auth/logout-all")
+  },
+
   getProfile: async (): Promise<User> => {
     const res = await axiosClient.get<any, User>("/users/me")
     return res as unknown as User
@@ -57,4 +71,23 @@ export const authApi = {
     })
     return res
   },
+}
+
+// Revokes the session on the backend (best effort) and always clears local auth state
+export const signOut = async (options: { allDevices?: boolean } = {}): Promise<void> => {
+  try {
+    if (options.allDevices) {
+      await authApi.logoutAll()
+    } else {
+      const refreshToken = getRefreshToken()
+      if (refreshToken) {
+        await authApi.logout(refreshToken)
+      }
+    }
+  } catch (err) {
+    console.warn("Logout request failed, clearing local session anyway:", err)
+  } finally {
+    clearAuth()
+    window.dispatchEvent(new Event("authChanged"))
+  }
 }

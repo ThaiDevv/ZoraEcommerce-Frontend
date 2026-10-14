@@ -14,8 +14,9 @@ import {
   AlertCircle
 } from 'lucide-react'
 import ZoraLogo from '../ZoraLogo'
-import { authApi } from '../../api/authApi'
+import { authApi, signOut } from '../../api/authApi'
 import type { User } from '../../types/auth'
+import { getAccessToken, saveTokens } from '../../utils/authStorage'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -44,7 +45,7 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
           }
         }
 
-        const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+        const token = getAccessToken()
         if (token) {
           const profile = await authApi.getProfile()
           if (profile) {
@@ -77,8 +78,7 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
         password: 'Password123@',
       })
       if (res && res.accessToken) {
-        localStorage.setItem('token', res.accessToken)
-        localStorage.setItem('refreshToken', res.refreshToken)
+        saveTokens({ accessToken: res.accessToken, refreshToken: res.refreshToken }, true)
         localStorage.setItem('username', res.username || 'Admin')
 
         const profile = await authApi.getProfile()
@@ -95,15 +95,10 @@ export default function AdminLayout({ children, title, subtitle }: AdminLayoutPr
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('user')
-    localStorage.removeItem('username')
-    sessionStorage.removeItem('token')
+  const handleLogout = async () => {
+    await signOut()
     setCurrentUser(null)
     setIsAdmin(false)
-    window.dispatchEvent(new Event('authChanged'))
     navigate('/login')
   }
 

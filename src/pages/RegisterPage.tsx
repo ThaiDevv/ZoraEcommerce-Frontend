@@ -17,6 +17,7 @@ import { authApi } from '../api/authApi'
 import ZoraLogo from '../components/ZoraLogo'
 import AuthTopbar from '../components/AuthTopbar'
 import AuthFooter from '../components/AuthFooter'
+import { saveTokens } from '../utils/authStorage'
 
 export default function RegisterPage() {
   const navigate = useNavigate()
@@ -180,10 +181,7 @@ export default function RegisterPage() {
         })
         const token = loginRes.accessToken || (loginRes as any).token
         if (token) {
-          localStorage.setItem('token', token)
-          if (loginRes.refreshToken) {
-            localStorage.setItem('refreshToken', loginRes.refreshToken)
-          }
+          saveTokens({ accessToken: token, refreshToken: loginRes.refreshToken }, true)
           if (loginRes.username) {
             localStorage.setItem('username', loginRes.username)
           }

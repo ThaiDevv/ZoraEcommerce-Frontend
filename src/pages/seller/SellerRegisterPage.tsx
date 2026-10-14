@@ -20,6 +20,7 @@ import ZoraLogo from '../../components/ZoraLogo'
 import { sellerApi, type ShopResponse } from '../../api/sellerApi'
 import { authApi } from '../../api/authApi'
 import type { User } from '../../types/auth'
+import { getAccessToken, saveTokens } from '../../utils/authStorage'
 
 export default function SellerRegisterPage() {
   const navigate = useNavigate()
@@ -41,7 +42,7 @@ export default function SellerRegisterPage() {
   const checkUserStatus = async () => {
     try {
       const storedUser = localStorage.getItem('user')
-      const token = localStorage.getItem('token')
+      const token = getAccessToken()
       if (storedUser && token) {
         const parsed: User = JSON.parse(storedUser)
         setCurrentUser(parsed)
@@ -93,9 +94,7 @@ export default function SellerRegisterPage() {
       })
       const token = res?.accessToken || (res as any)?.token
       if (token) {
-        localStorage.setItem('token', token)
-        sessionStorage.setItem('token', token)
-        if (res.refreshToken) localStorage.setItem('refreshToken', res.refreshToken)
+        saveTokens({ accessToken: token, refreshToken: res.refreshToken }, true)
         if (res.username) localStorage.setItem('username', res.username)
 
         const profile = await authApi.getProfile()

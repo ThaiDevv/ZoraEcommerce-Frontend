@@ -5,6 +5,7 @@ import { authApi } from '../api/authApi'
 import ZoraLogo from '../components/ZoraLogo'
 import AuthTopbar from '../components/AuthTopbar'
 import AuthFooter from '../components/AuthFooter'
+import { getAccessToken, saveTokens } from '../utils/authStorage'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -43,7 +44,7 @@ export default function LoginPage() {
   // Interactive 3D Perspective Tilt & Specular Light for artwork
   useEffect(() => {
     try {
-      const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+      const token = getAccessToken()
       const storedUser = localStorage.getItem('user')
       if (token && storedUser) {
         const u = JSON.parse(storedUser)
@@ -117,14 +118,7 @@ export default function LoginPage() {
 
       const token = response?.accessToken || (response as any)?.token
       if (token) {
-        if (rememberMe) {
-          localStorage.setItem('token', token)
-          if (response.refreshToken) {
-            localStorage.setItem('refreshToken', response.refreshToken)
-          }
-        } else {
-          sessionStorage.setItem('token', token)
-        }
+        saveTokens({ accessToken: token, refreshToken: response.refreshToken }, rememberMe)
         if (response.username) {
           localStorage.setItem('username', response.username)
         }

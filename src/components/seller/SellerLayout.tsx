@@ -16,11 +16,12 @@ import {
   ExternalLink,
   ChevronRight
 } from 'lucide-react'
-import { authApi } from '../../api/authApi'
+import { authApi, signOut } from '../../api/authApi'
 import { sellerApi } from '../../api/sellerApi'
 import type { User } from '../../types/auth'
 import ZoraLogo from '../ZoraLogo'
 import RegisterShopModal from './RegisterShopModal'
+import { getAccessToken, saveTokens } from '../../utils/authStorage'
 
 interface SellerLayoutProps {
   children: ReactNode
@@ -57,7 +58,7 @@ export default function SellerLayout({ children, title, subtitle }: SellerLayout
   const checkAuth = () => {
     try {
       const storedUser = localStorage.getItem('user')
-      const token = localStorage.getItem('token')
+      const token = getAccessToken()
       
       if (storedUser && token) {
         const parsed: User = JSON.parse(storedUser)
@@ -128,11 +129,7 @@ export default function SellerLayout({ children, title, subtitle }: SellerLayout
 
       const token = loginRes?.accessToken || (loginRes as any)?.token
       if (token) {
-        localStorage.setItem('token', token)
-        sessionStorage.setItem('token', token)
-        if (loginRes.refreshToken) {
-          localStorage.setItem('refreshToken', loginRes.refreshToken)
-        }
+        saveTokens({ accessToken: token, refreshToken: loginRes.refreshToken }, true)
         if (loginRes.username) {
           localStorage.setItem('username', loginRes.username)
         }
@@ -163,13 +160,8 @@ export default function SellerLayout({ children, title, subtitle }: SellerLayout
     }
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('user')
-    localStorage.removeItem('username')
-    localStorage.removeItem('current_seller_shop')
-    sessionStorage.removeItem('token')
+  const handleLogout = async () => {
+    await signOut()
     navigate('/login')
   }
 
