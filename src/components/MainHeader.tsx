@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import ZoraLogo from "./ZoraLogo"
 import { cartApi, type BackendCartItem } from "../api/cartApi"
+import { signOut } from "../api/authApi"
 
 const SEARCH_SUGGESTIONS = [
   "Iphone",
@@ -178,12 +179,8 @@ export default function MainHeader() {
     }
   }, [])
 
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("refreshToken")
-    localStorage.removeItem("user")
-    localStorage.removeItem("username")
-    sessionStorage.removeItem("token")
+  const handleLogout = async () => {
+    await signOut()
     setIsLoggedIn(false)
     setCurrentUser(null)
     setCartCount(0)
